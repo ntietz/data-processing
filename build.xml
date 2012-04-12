@@ -1,0 +1,59 @@
+
+<project name="hw2" default="compile" basedir=".">
+    <description>
+        A simple build file for Hadoop projects.
+    </description>
+
+    <property name="src" location="src/" />
+    <property name="lib" location="lib/" />
+    <property name="build" location="build/" />
+    <property name="dist" location="dist/" />
+
+    <path id="classpath.base">
+        <pathelement location="${build}" />
+        <pathelement location="${src}" />
+        <fileset dir="${lib}">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <!-- target: init -->
+    <target name="init"
+        description="Sets up the initial structure.">
+
+        <mkdir dir="${build}" />
+        <mkdir dir="${dist}" />
+
+    </target>
+
+    <!-- target: compile -->
+    <target name="compile" depends="init"
+        description="Compiles the project.">
+
+        <javac srcdir="${src}" destdir="${build}" debug="on">
+            <classpath refid="classpath.base" />
+        </javac>
+
+    </target>
+
+    <!-- target: jar -->
+    <target name="jar" depends="init,compile"
+        description="Jars the compiled project.">
+
+        <jar destfile="${dist}/jobs.jar">
+            <fileset dir="${build}" />
+        </jar>
+
+    </target>
+
+    <!-- target: clean -->
+    <target name="clean"
+        description="Removes compiled files.">
+
+        <delete dir="${build}" />
+        <delete dir="${dist}" />
+
+    </target>
+
+</project>
+
