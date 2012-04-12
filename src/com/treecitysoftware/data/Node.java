@@ -20,5 +20,19 @@ public class Node<T>
         neighbors = n;
     }
 
+    public void addNeighbor(String i)
+    {
+        neighbors.addNeighbor(i);
+    }
+
+    public void removeNeighbor(String i)
+    {
+        neighbors.removeNeighbor(i);
+    }
+
+    public boolean connectsTo(String i)
+    {
+        return neighbors.contains(i);
+    }
 }
 
