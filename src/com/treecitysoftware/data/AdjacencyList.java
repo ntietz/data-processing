@@ -15,5 +15,20 @@ public class AdjacencyList
     {
         neighbors = n;
     }
+
+    public void addNeighbor(String id)
+    {
+        neighbors.add(id);
+    }
+
+    public void removeNeighbor(String id)
+    {
+        neighbors.remove(id); // TODO should we remove all here?
+    }
+
+    public boolean contains(String id)
+    {
+        return neighbors.contains(id);
+    }
 }
 
