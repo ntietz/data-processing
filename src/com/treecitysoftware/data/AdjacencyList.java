@@ -13,17 +13,24 @@ public class AdjacencyList
 
     public AdjacencyList(List<String> n)
     {
-        neighbors = n;
+        neighbors = new ArrayList<String>(n);
     }
 
     public void addNeighbor(String id)
     {
-        neighbors.add(id);
+        if (!contains(id))
+        {
+            neighbors.add(id);
+        }
     }
 
     public void removeNeighbor(String id)
     {
-        neighbors.remove(id); // TODO should we remove all here?
+        boolean removing = true;
+        while (removing)
+        {
+            removing = neighbors.remove(id);
+        }
     }
 
     public boolean contains(String id)
