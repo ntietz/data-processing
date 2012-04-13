@@ -1,0 +1,99 @@
+
+<project name="data-processing" default="compile" basedir=".">
+    <description>
+        A simple build file for Hadoop projects.
+    </description>
+
+    <property name="src" location="src/" />
+    <property name="lib" location="lib/" />
+    <property name="build" location="build/" />
+    <property name="dist" location="dist/" />
+    <property name="test" location="test/" />
+    <property name="reports" location="reports/" />
+    <property name="reports.test" location="reports/test/" />
+
+    <path id="classpath.base">
+        <fileset dir="${lib}">
+            <include name="**/*.jar" />
+        </fileset>
+        <pathelement location="${build}" />
+        <pathelement location="${src}" />
+    </path>
+
+    <path id="classpath.test">
+        <pathelement location="${test}" />
+        <path refid="classpath.base" />
+    </path>
+
+    <!-- target: init -->
+    <target name="init"
+        description="Sets up the initial structure.">
+
+        <mkdir dir="${build}" />
+        <mkdir dir="${dist}" />
+
+    </target>
+
+    <!-- target: compile -->
+    <target name="compile" depends="init"
+        description="Compiles the project.">
+
+        <javac srcdir="${src}" destdir="${build}" debug="on">
+            <classpath refid="classpath.base" />
+        </javac>
+
+    </target>
+
+    <!-- target: compile-tests -->
+    <target name="compile-tests" depends="init,compile"
+        description="Compiles the tests.">
+
+        <javac srcdir="${test}" destdir="${build}" debug="on">
+            <classpath refid="classpath.test" />
+        </javac>
+
+    </target>
+
+    <!-- target: run-tests -->
+    <target name="run-tests" depends="compile-tests"
+        description="Run the tests.">
+
+        <mkdir dir="${reports}" />
+        <mkdir dir="${reports.test}" />
+
+        <echo message="${toString:classpath.test}" />
+
+        <junit printsummary="yes" failureProperty="test.failure">
+            <classpath refid="classpath.test" />
+            <formatter type="plain" />
+            <batchtest todir="${reports.test}">
+                <fileset dir="${test}">
+                    <include name="**/*Test.java" />
+                </fileset>
+            </batchtest>
+        </junit>
+
+        <fail message="Tests failed!" if="test.failure" />
+    </target>
+
+    <!-- target: jar -->
+    <target name="jar" depends="init,compile"
+        description="Jars the compiled project.">
+
+        <jar destfile="${dist}/jobs.jar">
+            <fileset dir="${build}" />
+        </jar>
+
+    </target>
+
+    <!-- target: clean -->
+    <target name="clean"
+        description="Removes compiled files.">
+
+        <delete dir="${build}" />
+        <delete dir="${dist}" />
+
+    </target>
+
+</project>
+
