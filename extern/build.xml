@@ -9,11 +9,8 @@
     <property name="build" location="build/" />
     <property name="dist" location="dist/" />
     <property name="test" location="test/" />
-    <property name="extern" location="extern/" />
-    <property name="instrumented" location="instrumented/" />
     <property name="reports" location="reports/" />
     <property name="reports.test" location="reports/test/" />
-    <property name="reports.cobertura" location="reports/cobertura/" />
 
     <path id="classpath.base">
         <fileset dir="${lib}">
@@ -24,15 +21,9 @@
     </path>
 
     <path id="classpath.test">
-        <pathelement location="${instrumented}" />
         <pathelement location="${test}" />
-        <fileset dir="${extern}">
-            <include name="**/*.jar" />
-        </fileset>
         <path refid="classpath.base" />
     </path>
-
-    <taskdef classpathref="classpath.test" resource="tasks.properties" />
 
     <!-- target: init -->
     <target name="init"
@@ -63,27 +54,14 @@
 
     </target>
 
-    <!-- target: instrument -->
-    <target name="instrument" depends="compile-tests"
-        description="Instruments the classes to measure coverage.">
-
-        <cobertura-instrument todir="${instrumented}"
-            datafile="cobertura.ser">
-
-            <fileset dir="${build}">
-                <include name="**/*.class"/>
-            </fileset>
-        </cobertura-instrument>
-
-    </target>
-
     <!-- target: run-tests -->
-    <target name="run-tests" depends="compile-tests,instrument"
+    <target name="run-tests" depends="compile-tests"
         description="Run the tests.">
 
         <mkdir dir="${reports}" />
         <mkdir dir="${reports.test}" />
-        <mkdir dir="${reports.cobertura}" />
+
+        <echo message="${toString:classpath.test}" />
 
         <junit printsummary="yes" failureProperty="test.failure">
             <classpath refid="classpath.test" />
@@ -94,12 +72,6 @@
                 </fileset>
             </batchtest>
         </junit>
-
-        <cobertura-report datafile="cobertura.ser"
-            format="html" destdir="${reports.cobertura}"
-            srcdir="${src}" >
-
-        </cobertura-report>
 
         <fail message="Tests failed!" if="test.failure" />
     </target>
@@ -120,7 +92,6 @@
 
         <delete dir="${build}" />
         <delete dir="${dist}" />
-        <delete dir="${instrumented}" />
 
     </target>
 
