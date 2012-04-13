@@ -1,5 +1,5 @@
 
-<project name="hw2" default="compile" basedir=".">
+<project name="data-processing" default="compile" basedir=".">
     <description>
         A simple build file for Hadoop projects.
     </description>
