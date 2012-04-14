@@ -25,11 +25,15 @@
 
     <path id="classpath.test">
         <pathelement location="${instrumented}" />
+        <pathelement location="${build}" />
         <pathelement location="${test}" />
+        <pathelement location="${src}" />
+        <fileset dir="${lib}">
+            <include name="**/*.jar" />
+        </fileset>
         <fileset dir="${extern}">
             <include name="**/*.jar" />
         </fileset>
-        <path refid="classpath.base" />
     </path>
 
     <taskdef classpathref="classpath.test" resource="tasks.properties" />
@@ -70,8 +74,11 @@
         <cobertura-instrument todir="${instrumented}"
             datafile="cobertura.ser">
 
+            <!--<excludeClasses regex=".*\.Test.*" />-->
+
             <fileset dir="${build}">
                 <include name="**/*.class"/>
+                <exclude name="**/*Test.class"/>
             </fileset>
         </cobertura-instrument>
 
@@ -86,6 +93,9 @@
         <mkdir dir="${reports.cobertura}" />
 
         <junit printsummary="yes" failureProperty="test.failure">
+            <sysproperty key="net.sourceforge.cobertura.datafile"
+                file="cobertura.ser" />
+
             <classpath refid="classpath.test" />
             <formatter type="plain" />
             <batchtest todir="${reports.test}">
@@ -95,13 +105,25 @@
             </batchtest>
         </junit>
 
+        <fail message="Tests failed!" if="test.failure" />
+    </target>
+
+    <!-- target: coverage -->
+    <target name="coverage"
+        description="Generate coverage report.">
+
+        <cobertura-report format="html" srcdir="${src}" destdir="${reports.cobertura}"/>
+        <!--
         <cobertura-report datafile="cobertura.ser"
-            format="html" destdir="${reports.cobertura}"
-            srcdir="${src}" >
+            format="html" destdir="${reports.cobertura}">
+
+            <fileset dir="${src}">
+                <include name="**/*.java" />
+            </fileset>
 
         </cobertura-report>
+        -->
 
-        <fail message="Tests failed!" if="test.failure" />
     </target>
 
     <!-- target: jar -->
@@ -121,6 +143,7 @@
         <delete dir="${build}" />
         <delete dir="${dist}" />
         <delete dir="${instrumented}" />
+        <delete file="cobertura.ser" />
 
     </target>
 
