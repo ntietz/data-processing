@@ -1,1 +1,6 @@
 This repository contains the code we will need for parsing graphs, performing data analysis on them, and building indexes to be used by other apps.
+
+To compile and run the tests, use "ant run-tests".
+
+To generate a Cobertura code coverage report, run "ant coverage" after running the tests.
+
