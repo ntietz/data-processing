@@ -1,5 +1,7 @@
 package com.treecitysoftware.data;
 
+import java.util.*;
+
 public class WikiPage
 {
     private String id;

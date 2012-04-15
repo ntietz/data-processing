@@ -55,5 +55,17 @@ public class Node<T>
     {
         return neighbors.contains(i);
     }
+
+    public boolean isDangling()
+    {
+        if (neighbors.size() == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
 
