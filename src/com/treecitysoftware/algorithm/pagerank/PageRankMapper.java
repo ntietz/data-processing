@@ -6,6 +6,7 @@ import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapred.*;
 
 import java.io.*;
+import java.util.*;
 
 public class PageRankMapper
 extends MapReduceBase
@@ -18,7 +19,16 @@ implements Mapper<Text, Node, Text, Writable>
                    )
     throws IOException
     {
-        // TODO add mapper content
+        Contribution contribution = new Contribution();
+        // TODO set contribution
+
+        List<String> neighbors = value.getNeighbors();
+        for (String each : neighbors);
+        {
+            
+        }
+
+        output.collect(key, (Writable)value);
     }
 
 }
