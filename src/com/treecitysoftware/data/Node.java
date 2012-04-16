@@ -1,8 +1,12 @@
 package com.treecitysoftware.data;
 
+import org.apache.hadoop.io.*;
+
+import java.io.*;
 import java.util.*;
 
-public class Node<T>
+public class Node
+implements Writable
 {
     /**
      * id is used within the system to identify nodes in lists of links and for supplementary information.
@@ -10,11 +14,11 @@ public class Node<T>
     private String id;
 
     /**
-     * value is a generic type so the payload of the node can be fitted to the problem.
+     * value is a writable type so the payload of the node can be fitted to the problem.
      * In PageRank, we will use value type Double so we can track the PageRank scores.
      * In a normal graph, we could have PageRank be the contents of the node, such as a WikiPage.
      */
-    private T value;
+    private Writable value;
 
     /**
      * neighbors stores the ids of all the adjacent nodes.
@@ -34,7 +38,7 @@ public class Node<T>
      * @param i id for the new node
      * @param v value of the new node
      */
-    public Node(String i, T v)
+    public Node(String i, Writable v)
     {
         id = i;
         value = v;
@@ -46,7 +50,7 @@ public class Node<T>
      * @param v value of the new node
      * @param n list of neighbor ids of the new node
      */
-    public Node(String i, T v, List<String> n)
+    public Node(String i, Writable v, List<String> n)
     {
         id = i;
         value = v;
@@ -64,7 +68,7 @@ public class Node<T>
     /**
      * @return the value of the node
      */
-    public T getValue()
+    public Writable getValue()
     {
         return value;
     }
@@ -124,6 +128,31 @@ public class Node<T>
         else
         {
             return false;
+        }
+    }
+
+    public void write(DataOutput out)
+    throws IOException
+    {
+        value.write(out);
+        out.writeUTF(id);
+        out.writeInt(neighbors.size());
+        for (int index = 0; index < neighbors.size(); ++index)
+        {
+            out.writeUTF(neighbors.get(index));
+        }
+    }
+
+    public void readFields(DataInput in)
+    throws IOException
+    {
+        value.readFields(in);
+        id = in.readUTF();
+        int size = in.readInt();
+        neighbors = new ArrayList(size);
+        for (int index = 0; index < size; ++index)
+        {
+            neighbors.add(in.readUTF());
         }
     }
 
