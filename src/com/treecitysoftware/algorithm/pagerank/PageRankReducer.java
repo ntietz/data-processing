@@ -12,6 +12,13 @@ public class PageRankReducer
 extends MapReduceBase
 implements Reducer<Text, Writable, Text, Node>
 {
+    private long numberOfNodes;
+
+    public  void configure(JobConf conf)
+    {
+        numberOfNodes = Long.valueOf(conf.get("numberOfNodes"));
+    }
+
     public void reduce( Text key
                       , Iterator<Writable> values
                       , OutputCollector<Text, Node> output
