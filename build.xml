@@ -126,6 +126,18 @@
 
     </target>
 
+    <!-- target: javadoc -->
+    <target name="javadoc"
+        description="Generate the javadoc reports.">
+
+        <mkdir dir="javadoc" />
+
+        <javadoc destdir="javadoc/">
+            <fileset dir="${src}" includes="**/*.java" />
+        </javadoc>
+
+    </target>
+
     <!-- target: jar -->
     <target name="jar" depends="init,compile"
         description="Jars the compiled project.">
@@ -142,6 +154,7 @@
 
         <delete dir="${build}" />
         <delete dir="${dist}" />
+        <delete dir="javadoc" />
         <delete dir="${instrumented}" />
         <delete file="cobertura.ser" />
 
