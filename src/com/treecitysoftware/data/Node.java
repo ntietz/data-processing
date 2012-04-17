@@ -66,7 +66,7 @@ implements Writable
     }
 
     /**
-     * @return the value of the node
+     * @return  the value of the node
      */
     public Writable getValue()
     {
@@ -74,11 +74,19 @@ implements Writable
     }
 
     /**
-     * @return the neighbors of the node
+     * @return  the neighbors of the node
      */
     public List<String> getNeighbors()
     {
         return neighbors;
+    }
+
+    /**
+     * @return  the number of neighbors
+     */
+    public int numberOfNeighbors()
+    {
+        return neighbors.size();
     }
 
     /**
