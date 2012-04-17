@@ -131,6 +131,10 @@ implements Writable
         }
     }
 
+    /**
+     * Serializes the object to a DataOutput object.
+     * @param out   the object we serialize using
+     */
     public void write(DataOutput out)
     throws IOException
     {
@@ -143,6 +147,10 @@ implements Writable
         }
     }
 
+    /**
+     * Deserializes the object from a DataInput object.
+     * @param in    the object we deserialize from
+     */
     public void readFields(DataInput in)
     throws IOException
     {
@@ -156,10 +164,51 @@ implements Writable
         }
     }
 
-    // TODO add equals
+    /**
+     * Tests for equality between this and the passed in object.
+     * It only checks for equality on the id since the id should be a unique identifier.
+     * @param obj   the object we want to check for equality with
+     * @return      true if the object is a node with the same id, false otherwise
+     */
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof Node)
+        {
+            Node other = (Node) obj;
 
-    // TODO add compareTo
+            return id.equals(other.id);
+        }
+        else
+        {
+            return false;
+        }
+    }
 
-    // TODO add hashCode
+    /**
+     * Compares this object with another object, on the basis of the id.
+     * @param obj   the object we want to compare to
+     * @return      -1 if the id is earlier, 0 if it is the same, 1 if it is later
+     */
+    public int compareTo(Object obj)
+    {
+        if (obj instanceof Node)
+        {
+            Node other = (Node) obj;
+
+            return id.compareTo(other.id);
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
+    /**
+     * @return  the hashcode of the id of the node
+     */
+    public int hashCode()
+    {
+        return id.hashCode();
+    }
 }
 
