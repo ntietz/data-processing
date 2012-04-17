@@ -66,6 +66,14 @@ implements Writable
     }
 
     /**
+     * @param v the value to set the node
+     */
+    public void setValue(Writable v)
+    {
+        value = v;
+    }
+
+    /**
      * @return  the value of the node
      */
     public Writable getValue()
