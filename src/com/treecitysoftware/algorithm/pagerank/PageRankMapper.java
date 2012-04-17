@@ -19,13 +19,19 @@ implements Mapper<Text, Node, Text, Writable>
                    )
     throws IOException
     {
-        Contribution contribution = new Contribution();
-        // TODO set contribution
+        double currentScore = ((DoubleWritable)value.getValue()).get();
+        double numberOfNeighbors = value.numberOfNeighbors();
 
-        List<String> neighbors = value.getNeighbors();
-        for (String each : neighbors);
+        if (numberOfNeighbors > 0)
         {
-            
+            Contribution contribution = new Contribution(currentScore / numberOfNeighbors);
+
+            List<String> neighbors = value.getNeighbors();
+            for (String each : neighbors)
+            {
+                Text outputKey = new Text(each);
+                output.collect(outputKey, (Writable)contribution);
+            }
         }
 
         output.collect(key, (Writable)value);
