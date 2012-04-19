@@ -6,11 +6,52 @@ import org.apache.hadoop.fs.*;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapred.*;
 
+import java.io.*;
+
 public class PageRankDriver
 {
-    public static void main(String... args)
+    /**
+     * Runs pagerank until convergence with the given input path and output path.
+     * The data at the input path IS preserved.
+     * The data ends up at the output path after convergence.
+     * @param initialInputPath      the path for the initial graph
+     * @param eventualOutputPath    the path for the final output
+     */
+    public void run(String initialInputPath, String outputBasePath)
+    throws IOException
     {
+        boolean finished = false;
+        int round = 0;
 
+        String inputPath = initialInputPath;
+        String outputPath = outputBasePath + "/" + round;
+
+        int numberOfReducers = 1;
+        int numberOfNodes = 0;
+        double lostWeight = 0.0;
+        double dampingFactor = 0.0;
+
+        while (!finished)
+        {
+
+            JobConf conf = getJobConfiguration( inputPath
+                                              , outputPath
+                                              , numberOfReducers
+                                              , numberOfNodes
+                                              , lostWeight
+                                              , dampingFactor
+                                              );
+
+            RunningJob job = JobClient.runJob(conf);
+            job.waitForCompletion();
+
+            // TODO calculate lost weight, check convergence
+
+            // TODO check for convergence here
+            finished = true;
+        }
+
+        // TODO since we're done, copy over to the location of eventualOutputPath
     }
 
     public JobConf getJobConfiguration( String inputPath
