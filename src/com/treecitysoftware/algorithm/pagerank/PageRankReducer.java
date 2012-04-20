@@ -24,6 +24,12 @@ implements Reducer<Text, Writable, Text, Node>
     private double dampingFactor;
 
     /**
+     * The adjustment bonus is the weight lost in the previous round divided by all the nodes.
+     * If the weight of the last round was higher than 1.0, adjustmentBonus will be negative.
+     */
+    private double adjustmentBonus;
+
+    /**
      * Initializes the numberOfNodes and dampingFactor, transmitted from the job driver.
      * This is run before reduce is run.
      * @param conf  allows reading values set by the job driver
@@ -32,6 +38,7 @@ implements Reducer<Text, Writable, Text, Node>
     {
         numberOfNodes = Long.valueOf(conf.get("numberOfNodes"));
         dampingFactor = Double.valueOf(conf.get("dampingFactor"));
+        adjustmentBonus = Double.valueOf(conf.get("adjustmentBonus"));
     }
 
     /**
@@ -67,6 +74,8 @@ implements Reducer<Text, Writable, Text, Node>
                 score += contribution.getAmount();
             }
         }
+
+        score += adjustmentBonus;
 
         score = dampingFactor / numberOfNodes + (1 - dampingFactor) * score;
 
