@@ -10,7 +10,7 @@ import java.util.*;
 
 public class PageRankMapper
 extends MapReduceBase
-implements Mapper<Text, Node, Text, Writable>
+implements Mapper<IntWritable, Node, IntWritable, Writable>
 {
     /**
      * Takes in (id, node) pairs and outputs one (id, node) and many (id, contribution) pairs.
@@ -21,9 +21,9 @@ implements Mapper<Text, Node, Text, Writable>
      * @param output    collects the output pairs for the reducer
      * @param reporter  allows sending counts back to the job driver
      */
-    public void map( Text key
+    public void map( IntWritable key
                    , Node value
-                   , OutputCollector<Text, Writable> output
+                   , OutputCollector<IntWritable, Writable> output
                    , Reporter reporter
                    )
     throws IOException
@@ -35,10 +35,10 @@ implements Mapper<Text, Node, Text, Writable>
         {
             Contribution contribution = new Contribution(currentScore / numberOfNeighbors);
 
-            List<String> neighbors = value.getNeighbors();
-            for (String each : neighbors)
+            List<Integer> neighbors = value.getNeighbors();
+            for (Integer each : neighbors)
             {
-                Text outputKey = new Text(each);
+                IntWritable outputKey = new IntWritable(each);
                 output.collect(outputKey, (Writable)contribution);
             }
         }
