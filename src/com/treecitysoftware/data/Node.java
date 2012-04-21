@@ -11,7 +11,7 @@ implements Writable
     /**
      * id is used within the system to identify nodes in lists of links and for supplementary information.
      */
-    private String id;
+    private int id;
 
     /**
      * value is a writable type so the payload of the node can be fitted to the problem.
@@ -24,7 +24,7 @@ implements Writable
      * neighbors stores the ids of all the adjacent nodes.
      * Each of these ids should exist as the id field of another node.
      */
-    private List<String> neighbors;
+    private List<Integer> neighbors;
 
     /**
      * There is no safe or desired default behavior, so the default constructor is disabled.
@@ -38,11 +38,11 @@ implements Writable
      * @param i id for the new node
      * @param v value of the new node
      */
-    public Node(String i, Writable v)
+    public Node(int i, Writable v)
     {
         id = i;
         value = v;
-        neighbors = new ArrayList<String>();
+        neighbors = new ArrayList<Integer>();
     }
 
     /**
@@ -50,7 +50,7 @@ implements Writable
      * @param v value of the new node
      * @param n list of neighbor ids of the new node
      */
-    public Node(String i, Writable v, List<String> n)
+    public Node(int i, Writable v, List<Integer> n)
     {
         id = i;
         value = v;
@@ -60,7 +60,7 @@ implements Writable
     /**
      * @return the id of the node
      */
-    public String getId()
+    public int getId()
     {
         return id;
     }
@@ -84,7 +84,7 @@ implements Writable
     /**
      * @return  the neighbors of the node
      */
-    public List<String> getNeighbors()
+    public List<Integer> getNeighbors()
     {
         return neighbors;
     }
@@ -102,7 +102,7 @@ implements Writable
      * Does not verify whether the id is already in the list.
      * @param i id of the neighbor to add.
      */
-    public void addNeighbor(String i)
+    public void addNeighbor(int i)
     {
         neighbors.add(i);
     }
@@ -111,12 +111,12 @@ implements Writable
      * Removes all instances of the neighbor from the neighbor list.
      * @param i id of the neighbor to remove
      */
-    public void removeNeighbor(String i)
+    public void removeNeighbor(int i)
     {
         boolean removing = true;
         while (removing)
         {
-            removing = neighbors.remove(id);
+            removing = neighbors.remove((Integer)id);
         }
     }
 
@@ -125,7 +125,7 @@ implements Writable
      * @param i id of the possible neighbor
      * @return  true if the id is a neighbor, false otherwise
      */
-    public boolean connectsTo(String i)
+    public boolean connectsTo(int i)
     {
         return neighbors.contains(i);
     }
@@ -155,11 +155,11 @@ implements Writable
     throws IOException
     {
         value.write(out);
-        out.writeUTF(id);
+        out.writeInt(id);
         out.writeInt(neighbors.size());
         for (int index = 0; index < neighbors.size(); ++index)
         {
-            out.writeUTF(neighbors.get(index));
+            out.writeInt(neighbors.get(index));
         }
     }
 
@@ -171,12 +171,12 @@ implements Writable
     throws IOException
     {
         value.readFields(in);
-        id = in.readUTF();
+        id = in.readInt();
         int size = in.readInt();
         neighbors = new ArrayList(size);
         for (int index = 0; index < size; ++index)
         {
-            neighbors.add(in.readUTF());
+            neighbors.add(in.readInt());
         }
     }
 
@@ -192,7 +192,7 @@ implements Writable
         {
             Node other = (Node) obj;
 
-            return id.equals(other.id);
+            return id == other.id;
         }
         else
         {
@@ -211,7 +211,18 @@ implements Writable
         {
             Node other = (Node) obj;
 
-            return id.compareTo(other.id);
+            if (id < other.id)
+            {
+                return -1;
+            }
+            else if (id == other.id)
+            {
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
         }
         else
         {
@@ -224,7 +235,7 @@ implements Writable
      */
     public int hashCode()
     {
-        return id.hashCode();
+        return id;
     }
 }
 
