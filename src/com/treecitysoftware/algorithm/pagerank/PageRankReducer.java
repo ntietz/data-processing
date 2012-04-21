@@ -10,7 +10,7 @@ import java.util.*;
 
 public class PageRankReducer
 extends MapReduceBase
-implements Reducer<Text, Writable, Text, Node>
+implements Reducer<IntWritable, Writable, IntWritable, Node>
 {
     /**
      * The number of nodes in the entire graph.
@@ -50,14 +50,14 @@ implements Reducer<Text, Writable, Text, Node>
      * @param output    collects the output pairs
      * @param reporter  allows sending counts back to the job driver
      */
-    public void reduce( Text key
+    public void reduce( IntWritable key
                       , Iterator<Writable> values
-                      , OutputCollector<Text, Node> output
+                      , OutputCollector<IntWritable, Node> output
                       , Reporter reporter
                       )
     throws IOException
     {
-        Node node = new Node(key.toString(), new DoubleWritable(0.0));
+        Node node = new Node(key.get(), new DoubleWritable(0.0));
         double score = 0.0;
 
         while (values.hasNext())

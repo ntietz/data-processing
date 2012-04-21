@@ -65,10 +65,10 @@ public class PageRankDriver
         JobConf conf = new JobConf(PageRankDriver.class);
         conf.setJobName("pagerank");
 
-        conf.setMapOutputKeyClass(Text.class);
+        conf.setMapOutputKeyClass(IntWritable.class);
         conf.setMapOutputValueClass(Writable.class);
 
-        conf.setOutputKeyClass(Text.class);
+        conf.setOutputKeyClass(IntWritable.class);
         conf.setOutputValueClass(Node.class);
 
         conf.setMapperClass(PageRankMapper.class);
