@@ -27,9 +27,9 @@ implements Writable
     private List<Integer> neighbors;
 
     /**
-     * There is no safe or desired default behavior, so the default constructor is disabled.
+     * There is no safe or desired default behavior; this is only public so Hadoop works correctly.
      */
-    private Node()
+    public Node()
     {
         // no safe or desired default behavior
     }
