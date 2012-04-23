@@ -36,10 +36,12 @@ implements Reducer<IntWritable, PageOrEdge, IntWritable, WikiPage>
             if (obj.isEdge())
             {
                 page.addNeighbor(obj.id);
+                reporter.incrCounter("ADDED", "NEIGHBOR", 1);
             }
             else if (obj.isPage())
             {
                 page.setValue(obj.page.getValue());
+                reporter.incrCounter("ADDED", "PAGE", 1);
             }
         }
 
