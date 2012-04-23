@@ -1,5 +1,6 @@
 package com.treecitysoftware.algorithm.pagerank;
 
+import com.treecitysoftware.common.*;
 import com.treecitysoftware.data.*;
 
 import org.apache.hadoop.io.*;
@@ -10,7 +11,7 @@ import java.util.*;
 
 public class PageRankMapper
 extends MapReduceBase
-implements Mapper<IntWritable, Node, IntWritable, Writable>
+implements Mapper<IntWritable, PageRankNode, IntWritable, NodeOrContribution>
 {
     /**
      * Takes in (id, node) pairs and outputs one (id, node) and many (id, contribution) pairs.
@@ -22,13 +23,13 @@ implements Mapper<IntWritable, Node, IntWritable, Writable>
      * @param reporter  allows sending counts back to the job driver
      */
     public void map( IntWritable key
-                   , Node value
-                   , OutputCollector<IntWritable, Writable> output
+                   , PageRankNode value
+                   , OutputCollector<IntWritable, NodeOrContribution> output
                    , Reporter reporter
                    )
     throws IOException
     {
-        double currentScore = ((DoubleWritable)value.getValue()).get();
+        double currentScore = value.getValue();
         double numberOfNeighbors = value.numberOfNeighbors();
 
         if (numberOfNeighbors > 0)
@@ -39,11 +40,11 @@ implements Mapper<IntWritable, Node, IntWritable, Writable>
             for (Integer each : neighbors)
             {
                 IntWritable outputKey = new IntWritable(each);
-                output.collect(outputKey, (Writable)contribution);
+                output.collect(outputKey, new NodeOrContribution(contribution));
             }
         }
 
-        output.collect(key, (Writable)value);
+        output.collect(key, new NodeOrContribution(value));
     }
 
 }

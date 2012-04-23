@@ -144,6 +144,10 @@
 
         <jar destfile="${dist}/jobs.jar">
             <fileset dir="${build}" />
+            <manifest>
+                <attribute name="Main-Class"
+                    value="com.treecitysoftware.common.CommonLauncher" />
+            </manifest>
         </jar>
 
     </target>

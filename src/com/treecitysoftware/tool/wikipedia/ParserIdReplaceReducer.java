@@ -1,5 +1,6 @@
 package com.treecitysoftware.tool.wikipedia;
 
+import com.treecitysoftware.common.*;
 import com.treecitysoftware.data.*;
 
 import org.apache.hadoop.io.*;
@@ -10,7 +11,7 @@ import java.util.*;
 
 public class ParserIdReplaceReducer
 extends MapReduceBase
-implements Reducer<Text, Writable, IntWritable, Writable>
+implements Reducer<Text, PageOrEdge, IntWritable, PageOrEdge>
 {
     /**
      * This reducer runs right after the mapper and replaces page titles with page ids.
@@ -20,39 +21,47 @@ implements Reducer<Text, Writable, IntWritable, Writable>
      * @param reporter  allows sending counts back to the job driver
      */
     public void reduce( Text key
-                      , Iterator<Writable> values
-                      , OutputCollector<IntWritable, Writable> output
+                      , Iterator<PageOrEdge> values
+                      , OutputCollector<IntWritable, PageOrEdge> output
                       , Reporter reporter
                       )
     throws IOException
     {
         String title = key.toString();
-        List<IntWritable> targets = new ArrayList<IntWritable>();
-        Node node = null;
+        List<Integer> targets = new ArrayList<Integer>();
+        WikiPage page = null;
 
         while (values.hasNext())
         {
-            Writable obj = values.next();
+            PageOrEdge obj = values.next();
 
-            if (obj instanceof IntWritable)
+            if (obj.isPage())
             {
-                targets.add((IntWritable)obj);
+                page = obj.page;
             }
-            else if (obj instanceof Node)
+            else if (obj.isEdge())
             {
-                node = (Node) obj;
+                targets.add(obj.id);
             }
+            else
+            {
+                reporter.incrCounter("NUMBER", "UNHANLDED", 1);
+            }
+
+            reporter.incrCounter("NUMBER", "TOTAL", 1);
         }
 
-        if (node != null)
+        if (page != null)
         {
-            IntWritable linkId = new IntWritable(node.getId());
+            Integer targetId = page.getId();
 
-            output.collect(linkId, node);
+            output.collect(new IntWritable(page.getId()), new PageOrEdge(page));
+            reporter.incrCounter("NUMBER", "NODES-WRITTEN", 1);
 
-            for (IntWritable each : targets)
+            for (Integer each : targets)
             {
-                output.collect(each, linkId);
+                output.collect(new IntWritable(each), new PageOrEdge(targetId));
+                reporter.incrCounter("NUMBER", "EDGES-WRITTEN", 1);
             }
         }
         // if node == null, then we know the link is a dead link
