@@ -1,5 +1,6 @@
 package com.treecitysoftware.algorithm.pagerank;
 
+import com.treecitysoftware.common.*;
 import com.treecitysoftware.data.*;
 
 import org.apache.hadoop.io.*;
@@ -10,7 +11,7 @@ import java.util.*;
 
 public class PageRankReducer
 extends MapReduceBase
-implements Reducer<IntWritable, Writable, IntWritable, Node>
+implements Reducer<IntWritable, NodeOrContribution, IntWritable, PageRankNode>
 {
     /**
      * The number of nodes in the entire graph.
@@ -51,27 +52,27 @@ implements Reducer<IntWritable, Writable, IntWritable, Node>
      * @param reporter  allows sending counts back to the job driver
      */
     public void reduce( IntWritable key
-                      , Iterator<Writable> values
-                      , OutputCollector<IntWritable, Node> output
+                      , Iterator<NodeOrContribution> values
+                      , OutputCollector<IntWritable, PageRankNode> output
                       , Reporter reporter
                       )
     throws IOException
     {
-        Node node = new Node(key.get(), new DoubleWritable(0.0));
+        
+        PageRankNode node = new PageRankNode(key.get(), 0.0);
         double score = 0.0;
 
         while (values.hasNext())
         {
-            Writable obj = values.next();
+            NodeOrContribution obj = values.next();
 
-            if (obj instanceof Node)
+            if (obj.isNode())
             {
-                node = (Node) obj;
+                node = obj.node;
             }
-            else if (obj instanceof Contribution)
+            else if (obj.isContribution())
             {
-                Contribution contribution = (Contribution) obj;
-                score += contribution.getAmount();
+                score += obj.contribution.getAmount();
             }
         }
 
@@ -79,7 +80,7 @@ implements Reducer<IntWritable, Writable, IntWritable, Node>
 
         score = dampingFactor / numberOfNodes + (1 - dampingFactor) * score;
 
-        node.setValue(new DoubleWritable(score));
+        node.setValue(score);
 
         output.collect(key, node);
     }

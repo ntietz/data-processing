@@ -66,10 +66,10 @@ public class PageRankDriver
         conf.setJobName("pagerank");
 
         conf.setMapOutputKeyClass(IntWritable.class);
-        conf.setMapOutputValueClass(Writable.class);
+        conf.setMapOutputValueClass(NodeOrContribution.class);
 
         conf.setOutputKeyClass(IntWritable.class);
-        conf.setOutputValueClass(Node.class);
+        conf.setOutputValueClass(PageRankNode.class);
 
         conf.setMapperClass(PageRankMapper.class);
         conf.setReducerClass(PageRankReducer.class);
