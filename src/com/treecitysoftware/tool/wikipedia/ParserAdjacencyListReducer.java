@@ -1,5 +1,6 @@
 package com.treecitysoftware.tool.wikipedia;
 
+import com.treecitysoftware.common.*;
 import com.treecitysoftware.data.*;
 
 import org.apache.hadoop.io.*;
@@ -10,7 +11,7 @@ import java.util.*;
 
 public class ParserAdjacencyListReducer
 extends MapReduceBase
-implements Reducer<IntWritable, Writable, IntWritable, Node>
+implements Reducer<IntWritable, PageOrEdge, IntWritable, WikiPage>
 {
     /**
      * This reducer runs after the first reducer and creates the nodes with their adjacency lists.
@@ -20,31 +21,30 @@ implements Reducer<IntWritable, Writable, IntWritable, Node>
      * @param reporter  allows sending counts back to the job driver
      */
     public void reduce( IntWritable key
-                      , Iterator<Writable> values
-                      , OutputCollector<IntWritable, Node> output
+                      , Iterator<PageOrEdge> values
+                      , OutputCollector<IntWritable, WikiPage> output
                       , Reporter reporter
                       )
     throws IOException
     {
-        Node node = new Node(key.get(), new Text(""));
+        WikiPage page = new WikiPage(key.get(), "");
 
         while (values.hasNext())
         {
-            Writable obj = values.next();
+            PageOrEdge obj = values.next();
 
-            if (obj instanceof IntWritable)
+            if (obj.isEdge())
             {
-                IntWritable id = (IntWritable) obj;
-                node.addNeighbor(id.get());
+                page.addNeighbor(obj.id);
             }
-            else if (obj instanceof Node)
+            else if (obj.isPage())
             {
-                Node original = (Node) obj;
-                node.setValue(original.getValue());
+                page.setValue(obj.page.getValue());
             }
         }
 
-        output.collect(key, node);
+        output.collect(key, page);
+        reporter.incrCounter("WRITTEN", "NODES", 1);
     }
 }
 

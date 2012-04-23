@@ -1,5 +1,6 @@
 package com.treecitysoftware.tool.wikipedia;
 
+import com.treecitysoftware.common.*;
 import com.treecitysoftware.data.*;
 
 import org.apache.hadoop.io.*;
@@ -10,7 +11,7 @@ import java.util.*;
 
 public class ParserMapper
 extends MapReduceBase
-implements Mapper<LongWritable, Text, Text, Writable>
+implements Mapper<LongWritable, Text, Text, PageOrEdge>
 {
     /**
      * Takes in a line of text and parse it into nodes and edges.
@@ -24,7 +25,7 @@ implements Mapper<LongWritable, Text, Text, Writable>
      */
     public void map( LongWritable key
                    , Text line
-                   , OutputCollector<Text, Writable> output
+                   , OutputCollector<Text, PageOrEdge> output
                    , Reporter reporter
                    )
     throws IOException
@@ -40,10 +41,10 @@ implements Mapper<LongWritable, Text, Text, Writable>
                 int id = Integer.valueOf(each.left);
                 String title = each.right;
 
-                Text payload = new Text(title);
-                Node node = new Node(id, payload);
+                PageOrEdge page = new PageOrEdge(new WikiPage(id, title));
 
-                output.collect(new Text(title), node);
+                output.collect(new Text(title), page);
+                reporter.incrCounter("NUMBER", "PAGES", 1);
             }
         }
         else if (parsedLine.containsEdgeData())
@@ -56,7 +57,9 @@ implements Mapper<LongWritable, Text, Text, Writable>
                 String title = each.right;
 
                 // emit: (targetTitle, originator id)
-                output.collect(new Text(title), new IntWritable(id));
+                PageOrEdge originatorId = new PageOrEdge(id);
+                output.collect(new Text(title), originatorId);
+                reporter.incrCounter("NUMBER", "EDGES", 1);
             }
         }
     }
