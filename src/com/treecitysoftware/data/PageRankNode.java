@@ -1,11 +1,13 @@
 package com.treecitysoftware.data;
 
+import com.treecitysoftware.common.*;
+
 import org.apache.hadoop.io.*;
 
 import java.io.*;
 import java.util.*;
 
-public class Node
+public class PageRankNode
 implements Writable
 {
     /**
@@ -18,7 +20,7 @@ implements Writable
      * In PageRank, we will use value type Double so we can track the PageRank scores.
      * In a normal graph, we could have PageRank be the contents of the node, such as a WikiPage.
      */
-    private Writable value;
+    private double value;
 
     /**
      * neighbors stores the ids of all the adjacent nodes.
@@ -27,9 +29,9 @@ implements Writable
     private List<Integer> neighbors;
 
     /**
-     * There is no safe or desired default behavior, so the default constructor is disabled.
+     * There is no safe or desired default behavior; this is only public so Hadoop works correctly.
      */
-    private Node()
+    public PageRankNode()
     {
         // no safe or desired default behavior
     }
@@ -38,7 +40,7 @@ implements Writable
      * @param i id for the new node
      * @param v value of the new node
      */
-    public Node(int i, Writable v)
+    public PageRankNode(int i, double v)
     {
         id = i;
         value = v;
@@ -50,7 +52,7 @@ implements Writable
      * @param v value of the new node
      * @param n list of neighbor ids of the new node
      */
-    public Node(int i, Writable v, List<Integer> n)
+    public PageRankNode(int i, double v, List<Integer> n)
     {
         id = i;
         value = v;
@@ -68,7 +70,7 @@ implements Writable
     /**
      * @param v the value to set the node
      */
-    public void setValue(Writable v)
+    public void setValue(double v)
     {
         value = v;
     }
@@ -76,7 +78,7 @@ implements Writable
     /**
      * @return  the value of the node
      */
-    public Writable getValue()
+    public double getValue()
     {
         return value;
     }
@@ -154,7 +156,7 @@ implements Writable
     public void write(DataOutput out)
     throws IOException
     {
-        value.write(out);
+        out.writeDouble(value);
         out.writeInt(id);
         out.writeInt(neighbors.size());
         for (int index = 0; index < neighbors.size(); ++index)
@@ -170,7 +172,7 @@ implements Writable
     public void readFields(DataInput in)
     throws IOException
     {
-        value.readFields(in);
+        value = in.readDouble();
         id = in.readInt();
         int size = in.readInt();
         neighbors = new ArrayList(size);
@@ -188,9 +190,9 @@ implements Writable
      */
     public boolean equals(Object obj)
     {
-        if (obj instanceof Node)
+        if (obj instanceof PageRankNode)
         {
-            Node other = (Node) obj;
+            PageRankNode other = (PageRankNode) obj;
 
             return id == other.id;
         }
@@ -207,9 +209,9 @@ implements Writable
      */
     public int compareTo(Object obj)
     {
-        if (obj instanceof Node)
+        if (obj instanceof PageRankNode)
         {
-            Node other = (Node) obj;
+            PageRankNode other = (PageRankNode) obj;
 
             if (id < other.id)
             {
