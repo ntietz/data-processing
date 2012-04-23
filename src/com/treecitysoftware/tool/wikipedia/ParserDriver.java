@@ -31,11 +31,9 @@ public class ParserDriver
         RunningJob job = JobClient.runJob(conf);
         job.waitForCompletion();
 
-        /*
         conf = getAdjacencyConf(tmpPath, outputPath, numberOfReducers);
         job = JobClient.runJob(conf);
         job.waitForCompletion();
-        */
 
         // TODO : cleanup (delete tmpPath)
     }

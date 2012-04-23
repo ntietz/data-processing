@@ -10,11 +10,13 @@ public class CommonLauncher
     public static void main(String... args)
     throws IOException
     {
-        int numberOfArguments = args.length - 2;
+        int numberOfArguments = args.length - 1;
         String[] arguments = new String[numberOfArguments];
-        System.arraycopy(args, 2, arguments, 0, numberOfArguments);
+        System.arraycopy(args, 1, arguments, 0, numberOfArguments);
 
-        String command = args[1];
+        String command = args[0];
+
+        System.out.println(command);
 
         if (command.equals("parse"))
         {
