@@ -3,6 +3,7 @@ package com.treecitysoftware.algorithm.parallelbfs;
 import org.apache.hadoop.io.*;
 
 import java.io.*;
+import java.lang.*;
 import java.util.*;
 
 public class BFSStatus
@@ -21,7 +22,7 @@ implements Writable
     /**
      * The shortest path from the starting node to this current node
      */
-    private List<int> path;
+    private List<Integer> path;
 
     /**
      * Default Constructor returns a BFSStatus with an empty path and 
@@ -31,7 +32,7 @@ implements Writable
     {
         distance = Integer.MAX_VALUE;
         target = false;
-        path = new ArrayList<int>();
+        path = new ArrayList<Integer>();
     }
 
     /**
@@ -39,7 +40,7 @@ implements Writable
      * @param startingTarget Denotes if the node is a target node
      * @param startingPath The path from the source node to the current node
      */
-    public BFSStatus(int startingDistance, boolean startingTarget, List<int> startingPath)
+    public BFSStatus(int startingDistance, boolean startingTarget, List<Integer> startingPath)
     {
         distance = startingDistance;
         target = startingTarget;
@@ -86,7 +87,7 @@ implements Writable
      * Returns the path from the starting node to the current node
      * @return The path from the starting node to the current node
      */
-    public List<int> getPath()
+    public List<Integer> getPath()
     {
         return path;
     }
@@ -95,7 +96,7 @@ implements Writable
      * Sets the path from the starting node to the current node
      * @param newPath The path from the starting node to the current node
      */
-    public void setPath(List<int> newPath)
+    public void setPath(List<Integer> newPath)
     {
         path = newPath;
     }
@@ -104,15 +105,15 @@ implements Writable
      * Deserializes the object out to the disk
      * @param out DataOutput object used to serialize the data to disk
      */
-    public void write(DataOuput out)
+    public void write(DataOutput out)
     throws IOException
     {
         out.writeInt(distance);
         out.writeBoolean(target);
         out.writeInt(path.size());
-        for( int each : path )
+        for( Integer each : path )
         {
-            out.writeInt(each);
+            out.writeInt(each.intValue());
         }
     }
 
@@ -128,7 +129,7 @@ implements Writable
         int pathSize = in.readInt();
         for ( int idx = 0; idx < pathSize; idx++ )
         {
-            path.add(in.readInt());
+            path.add(new Integer(in.readInt()));
         }
     }
 }

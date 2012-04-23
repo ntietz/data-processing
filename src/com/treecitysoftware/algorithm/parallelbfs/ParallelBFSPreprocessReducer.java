@@ -35,7 +35,7 @@ implements Reducer<IntWritable, Node, IntWritable, Node>
     /**
      * Set that is created to hold the nodes in the target file
      */
-    private Set<int> targetNodes;
+    private Set<Integer> targetNodes;
 
     /**
      * Runs before any reducing begins; Sets the file name and 
@@ -46,7 +46,7 @@ implements Reducer<IntWritable, Node, IntWritable, Node>
     {
         sourceNodeID = Integer.valueOf(conf.get("sourceNodeID"));
         targetNodeFileName = conf.get("targetNodeFileName");
-        targetNodes = new TreeSet<int>();
+        targetNodes = new TreeSet<Integer>();
     }
 
     /**
@@ -96,15 +96,15 @@ implements Reducer<IntWritable, Node, IntWritable, Node>
         if(targetNodes.contains(key.get()))
         {
             //Set it as a target node
-            node.getValue().setTarget(true);
+            ((BFSStatus)(node.getValue())).setTarget(true);
         }
 
         //if the node is the source
         if(key.get() == sourceNodeID)
         {
             //set the path to itself, and set the distance to 0.
-            node.getValue().setDistance(0);
-            node.getValue().getPath().add(key.get());
+            ((BFSStatus)(node.getValue())).setDistance(0);
+            ((BFSStatus)(node.getValue())).getPath().add(key.get());
         }
 
         //Emit the nodeID and Node
