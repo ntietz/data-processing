@@ -29,7 +29,12 @@ public class ParsedGraphViewer
 
         while (reader.next(id, page))
         {
-            System.out.println(id.get() + ":\t" + page.getValue());
+            String outputLine = id.get() + ":\t" + page.getValue() + "\t...\t";
+            for (Integer each : page.getNeighbors())
+            {
+                outputLine += each + ", ";
+            }
+            System.out.println(outputLine);
         }
     }
 }
