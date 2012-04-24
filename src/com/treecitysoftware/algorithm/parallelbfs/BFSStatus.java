@@ -13,11 +13,6 @@ implements Writable
      * Distance from the current Node to the Source Node
      */
     private int distance;
-    
-    /**
-     * Denotes if the node is a target or not
-     */
-    private boolean target;
 
     /**
      * The shortest path from the starting node to this current node
@@ -31,19 +26,16 @@ implements Writable
     public BFSStatus()
     {
         distance = Integer.MAX_VALUE;
-        target = false;
         path = new ArrayList<Integer>();
     }
 
     /**
      * @param startingDistance The distance from the starting node
-     * @param startingTarget Denotes if the node is a target node
      * @param startingPath The path from the source node to the current node
      */
-    public BFSStatus(int startingDistance, boolean startingTarget, List<Integer> startingPath)
+    public BFSStatus(int startingDistance, List<Integer> startingPath)
     {
         distance = startingDistance;
-        target = startingTarget;
         path = startingPath;
     }
 
@@ -63,24 +55,6 @@ implements Writable
     public void setDistance(int newDistance)
     {
         distance = newDistance;
-    }
-
-    /**
-     * Tests to see if node is a target node
-     * @return true if it is a target node
-     */
-    public boolean isTarget()
-    {
-        return target;
-    }
-
-    /**
-     * Sets the target node status of the node
-     * @param newTarget Whether or not the node is a target
-     */
-    public void setTarget(boolean newTarget)
-    {
-        target = newTarget;
     }
 
     /**
@@ -109,7 +83,6 @@ implements Writable
     throws IOException
     {
         out.writeInt(distance);
-        out.writeBoolean(target);
         out.writeInt(path.size());
         for( Integer each : path )
         {
@@ -125,7 +98,6 @@ implements Writable
     throws IOException
     {
         distance = in.readInt();
-        target = in.readBoolean();
         int pathSize = in.readInt();
         for ( int idx = 0; idx < pathSize; idx++ )
         {

@@ -11,23 +11,26 @@ import java.util.*;
 
 public class ParallelBFSPreprocessMapper
 extends MapReduceBase
-implements Mapper<IntWritable, Node, IntWritable, Node>
+implements Mapper<IntWritable, WikiPage, IntWritable, BFSNode>
 {
     /**
-     * Takes in (id, node) pairs and releases one identical (id, node) pair
-     * for each pair it recieves.
+     * Takes in (id, page) pairs and releases one identical (id, node) 
+     * pair for each pair it recieves.
      * @param key The Node ID
      * @param Node The Node object
      * @param output An Output Collector that collects (id, node) pairs
      * @param reporter Default reporter object
      */
     public void map(IntWritable key
-                  , Node value
-                  , OutputCollector<IntWritable, Node> output
+                  , WikiPage value
+                  , OutputCollector<IntWritable, BFSNode> output
                   , Reporter reporter
                   )
     throws IOException
     {
-        output.collect(key, value);
+        BFSNode n = new BFSNode(key.get()
+                              , new BFSStatus()
+                              , value.getNeighbors());
+        output.collect(key, n);
     }
 }
