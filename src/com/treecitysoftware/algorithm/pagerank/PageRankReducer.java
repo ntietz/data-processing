@@ -80,6 +80,11 @@ implements Reducer<IntWritable, NodeOrContribution, IntWritable, PageRankNode>
 
         score = dampingFactor / numberOfNodes + (1 - dampingFactor) * score;
 
+        // collect the differences in scores for convergence checking
+        Double difference = Math.abs(score - node.getValue());
+        long scaledChange = PageRankConstants.scalingFactor * difference.longValue();
+        reporter.incrCounter("WEIGHT", "CHANGED", scaledChange);
+
         node.setValue(score);
 
         output.collect(key, node);
