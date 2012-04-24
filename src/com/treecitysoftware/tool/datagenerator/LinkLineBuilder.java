@@ -1,4 +1,4 @@
-package com.treecitysoftware.data;
+package com.treecitysoftware.tool.datagenerator;
 
 import java.util.*;
 
@@ -7,12 +7,12 @@ public class LinkLineBuilder {
 	private String line;
 	private List<LinkBuilder> links;
 	
-	LinkLineBuilder()
+	private LinkLineBuilder()
 	{
 		//NOT SAFE
 	}
 	
-	LinkLineBuilder(List<LinkBuilder> l)
+	public LinkLineBuilder(List<LinkBuilder> l)
 	{
 		links = l;
 		header = new String("INSERT INTO `pagelinks` VALUES ");
