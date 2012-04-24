@@ -38,28 +38,42 @@ implements Mapper<LongWritable, Text, Text, PageOrEdge>
 
             for (StringPair each : pages)
             {
-                int id = Integer.valueOf(each.left);
-                String title = each.right;
+                try
+                {
+                    int id = Integer.valueOf(each.left);
+                    String title = each.right;
 
-                PageOrEdge page = new PageOrEdge(new WikiPage(id, title));
+                    PageOrEdge page = new PageOrEdge(new WikiPage(id, title));
 
-                output.collect(new Text(title), page);
-                reporter.incrCounter("NUMBER", "PAGES", 1);
+                    output.collect(new Text(title), page);
+                    reporter.incrCounter("NUMBER", "PAGES", 1);
+                }
+                catch (Exception e)
+                {
+                    reporter.incrCounter("FAILED", "PAGES", 1);
+                }
             }
         }
         else if (parsedLine.containsEdgeData())
         {
-            List<StringPair> edges = parsedLine.getEdges();
-
-            for (StringPair each : edges)
+            try
             {
-                int id = Integer.valueOf(each.left);
-                String title = each.right;
+                List<StringPair> edges = parsedLine.getEdges();
 
-                // emit: (targetTitle, originator id)
-                PageOrEdge originatorId = new PageOrEdge(id);
-                output.collect(new Text(title), originatorId);
-                reporter.incrCounter("NUMBER", "EDGES", 1);
+                for (StringPair each : edges)
+                {
+                    int id = Integer.valueOf(each.left);
+                    String title = each.right;
+
+                    // emit: (targetTitle, originator id)
+                    PageOrEdge originatorId = new PageOrEdge(id);
+                    output.collect(new Text(title), originatorId);
+                    reporter.incrCounter("NUMBER", "EDGES", 1);
+                }
+            }
+            catch (Exception e)
+            {
+                reporter.incrCounter("FAILED", "EDGES", 1);
             }
         }
     }
