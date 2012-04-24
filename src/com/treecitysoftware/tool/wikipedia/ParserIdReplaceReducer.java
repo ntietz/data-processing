@@ -64,6 +64,10 @@ implements Reducer<Text, PageOrEdge, IntWritable, PageOrEdge>
                 reporter.incrCounter("NUMBER", "EDGES-WRITTEN", 1);
             }
         }
+        else
+        {
+            reporter.incrCounter("NUMBER", "DEAD-LINKS", 1);
+        }
         // if node == null, then we know the link is a dead link
     }
 }

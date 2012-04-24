@@ -2,6 +2,8 @@ package com.treecitysoftware.common;
 
 import com.treecitysoftware.algorithm.pagerank.*;
 import com.treecitysoftware.tool.wikipedia.*;
+import com.treecitysoftware.data.*;
+//TODO remove data
 
 import java.io.*;
 
@@ -10,6 +12,16 @@ public class CommonLauncher
     public static void main(String... args)
     throws IOException
     {
+        if (args.length < 3)
+        {
+            System.out.println("Choices:");
+            System.out.println("    parse");
+            System.out.println("    view-parsed-graph");
+            System.out.println("    make-test-data");
+            System.out.println("");
+            System.exit(1);
+        }
+
         int numberOfArguments = args.length - 1;
         String[] arguments = new String[numberOfArguments];
         System.arraycopy(args, 1, arguments, 0, numberOfArguments);
@@ -26,6 +38,11 @@ public class CommonLauncher
         {
             System.out.println("viewing");
             ParsedGraphViewer.main(arguments);
+        }
+        else if (command.equals("make-test-data"))
+        {
+            System.out.println("generating");
+
         }
     }
 }

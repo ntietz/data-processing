@@ -1,4 +1,4 @@
-package com.treecitysoftware.data;
+package com.treecitysoftware.tool.datagenerator;
 
 import java.util.*;
 

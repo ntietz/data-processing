@@ -113,7 +113,7 @@ public class DataLine
 
         do
         {
-            //System.out.println(pages.size() + "\t" + strippedLine.length());
+            System.out.println(pages.size() + "\t" + strippedLine.length());
 
             int firstComma = strippedLine.indexOf(',');
             int secondComma = strippedLine.indexOf(',', firstComma + 1);
@@ -128,7 +128,7 @@ public class DataLine
             String thisPage = strippedLine.substring(0, endIndex);
             strippedLine = strippedLine.substring(endIndex+1, strippedLine.length());
 
-            //System.out.println(thisPage);
+            System.out.println(thisPage);
 
             String id = thisPage.substring(1, firstComma);
             String namespace = thisPage.substring(firstComma + 1, secondComma);
