@@ -50,7 +50,6 @@ public class PageRankDriver
             RunningJob job = JobClient.runJob(conf);
             job.waitForCompletion();
 
-            // TODO check for convergence here
             long scaledChange = job.getCounters().findCounter("WEIGHT", "CHANGED").getCounter();
             double change = ((double)scaledChange) / PageRankConstants.scalingFactor;
 

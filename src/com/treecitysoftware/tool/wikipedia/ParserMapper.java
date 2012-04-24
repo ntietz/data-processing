@@ -34,24 +34,24 @@ implements Mapper<LongWritable, Text, Text, PageOrEdge>
 
         if (parsedLine.containsPageData())
         {
-            List<StringPair> pages = parsedLine.getPages();
-
-            for (StringPair each : pages)
+            try
             {
-                try
-                {
-                    int id = Integer.valueOf(each.left);
-                    String title = each.right;
+                List<StringPair> pages = parsedLine.getPages();
 
-                    PageOrEdge page = new PageOrEdge(new WikiPage(id, title));
-
-                    output.collect(new Text(title), page);
-                    reporter.incrCounter("NUMBER", "PAGES", 1);
-                }
-                catch (Exception e)
+                for (StringPair each : pages)
                 {
-                    reporter.incrCounter("FAILED", "PAGES", 1);
+                        int id = Integer.valueOf(each.left);
+                        String title = each.right;
+
+                        PageOrEdge page = new PageOrEdge(new WikiPage(id, title));
+
+                        output.collect(new Text(title), page);
+                        reporter.incrCounter("NUMBER", "PAGES", 1);
                 }
+            }
+            catch (Exception e)
+            {
+                reporter.incrCounter("FAILED", "PAGES", 1);
             }
         }
         else if (parsedLine.containsEdgeData())
