@@ -20,11 +20,9 @@ public class BFSStatusTest
 
         int d = 0;
         List<Integer> p = new ArrayList<Integer>();
-        boolean t = false;
 
         assertEquals("Distance does not match.", d, bfss.getDistance());
         assertEquals("Paths do not match.", p, bfss.getPath());
-        assertEquals("Unmatched target flag.", t, bfss.isTarget());
     }
 
     @Test
@@ -36,13 +34,11 @@ public class BFSStatusTest
         p.add(new Integer(2));
         p.add(new Integer(3));
         p.add(new Integer(4));
-        boolean t = true;
 
-        BFSStatus bfss = new BFSStatus(d,t,p);
+        BFSStatus bfss = new BFSStatus(d,p);
 
         assertEquals("Distance does not match.", d, bfss.getDistance());
         assertEquals("Paths do not match.", p, bfss.getPath());
-        assertEquals("Unmatched target flag.", t, bfss.isTarget());
     }
 
     @Test
@@ -54,15 +50,12 @@ public class BFSStatusTest
         List<Integer> p = new ArrayList<Integer>();
         p.add(new Integer(1));
         p.add(new Integer(2));
-        boolean t = true;
 
         bfss.setDistance(d);
         bfss.setPath(p);
-        bfss.setTarget(t);
 
         assertEquals("Distance does not match.", d, bfss.getDistance());
         assertEquals("Paths do not match.", p, bfss.getPath());
-        assertEquals("Unmatched target flag.", t, bfss.isTarget());
     }
 
     @Test
