@@ -34,32 +34,46 @@ implements Mapper<LongWritable, Text, Text, PageOrEdge>
 
         if (parsedLine.containsPageData())
         {
-            List<StringPair> pages = parsedLine.getPages();
-
-            for (StringPair each : pages)
+            try
             {
-                int id = Integer.valueOf(each.left);
-                String title = each.right;
+                List<StringPair> pages = parsedLine.getPages();
 
-                PageOrEdge page = new PageOrEdge(new WikiPage(id, title));
+                for (StringPair each : pages)
+                {
+                        int id = Integer.valueOf(each.left);
+                        String title = each.right;
 
-                output.collect(new Text(title), page);
-                reporter.incrCounter("NUMBER", "PAGES", 1);
+                        PageOrEdge page = new PageOrEdge(new WikiPage(id, title));
+
+                        output.collect(new Text(title), page);
+                        reporter.incrCounter("NUMBER", "PAGES", 1);
+                }
+            }
+            catch (Exception e)
+            {
+                reporter.incrCounter("FAILED", "PAGES", 1);
             }
         }
         else if (parsedLine.containsEdgeData())
         {
-            List<StringPair> edges = parsedLine.getEdges();
-
-            for (StringPair each : edges)
+            try
             {
-                int id = Integer.valueOf(each.left);
-                String title = each.right;
+                List<StringPair> edges = parsedLine.getEdges();
 
-                // emit: (targetTitle, originator id)
-                PageOrEdge originatorId = new PageOrEdge(id);
-                output.collect(new Text(title), originatorId);
-                reporter.incrCounter("NUMBER", "EDGES", 1);
+                for (StringPair each : edges)
+                {
+                    int id = Integer.valueOf(each.left);
+                    String title = each.right;
+
+                    // emit: (targetTitle, originator id)
+                    PageOrEdge originatorId = new PageOrEdge(id);
+                    output.collect(new Text(title), originatorId);
+                    reporter.incrCounter("NUMBER", "EDGES", 1);
+                }
+            }
+            catch (Exception e)
+            {
+                reporter.incrCounter("FAILED", "EDGES", 1);
             }
         }
     }

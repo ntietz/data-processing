@@ -8,8 +8,18 @@ import org.apache.hadoop.mapred.*;
 
 public class PageRankPreprocessJob
 {
+    public void main(String... args)
+    {
+        String inputPath = args[0];
+        String outputPath = args[1];
+        int numberOfReducers = Integer.valueOf(args[2]);
+        long numberOfNodes = Long.valueOf(args[3]);
+        double lostWeight = 0.0;
+        double dampingFactor = Double.valueOf(args[4]);
 
-    // TODO FIX THIS TO BE RIGHT TODO TODO TODO TODO 
+        // TODO finish this job
+    }
+
     public JobConf getJobConfiguration( String inputPath
                                       , String outputPath
                                       , int numberOfReducers
