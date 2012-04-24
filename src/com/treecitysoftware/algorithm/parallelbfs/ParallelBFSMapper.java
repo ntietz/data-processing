@@ -9,9 +9,9 @@ import org.apache.hadoop.mapred.*;
 import java.io.*;
 import java.util.*;
 
-public class ParallelBFSPreprocessMapper
+public class ParallelBFSMapper
 extends MapReduceBase
-implements Mapper<IntWritable, Node, IntWritable, Node>
+implements Mapper<IntWritable, BFSNode, IntWritable, BFSNode>
 {
     /**
      * Takes in (id, node) pairs and propogates their distance values
@@ -23,8 +23,8 @@ implements Mapper<IntWritable, Node, IntWritable, Node>
      * @param reporter Default reporter object
      */
     public void map(IntWritable key
-                  , Node value
-                  , OutputCollector<IntWritable, Node> output
+                  , BFSNode value
+                  , OutputCollector<IntWritable, BFSNode> output
                   , Reporter reporter
                   )
     throws IOException
@@ -35,7 +35,7 @@ implements Mapper<IntWritable, Node, IntWritable, Node>
         //If it's infinity, then we have not discovered our position yet
         if(distanceSoFar == Integer.MAX_VALUE)
         {
-            
+            // TODO : After getting compilable code
         }
     }
 }

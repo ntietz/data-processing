@@ -13,7 +13,7 @@ import java.util.*;
 
 public class ParallelBFSPreprocessReducer
 extends MapReduceBase
-implements Reducer<IntWritable, Node, IntWritable, Node>
+implements Reducer<IntWritable, BFSNode, IntWritable, BFSNode>
 {
     /**
      * The ID of the sourceNode that we are currently
@@ -60,8 +60,8 @@ implements Reducer<IntWritable, Node, IntWritable, Node>
      * @param reporter The default reporting object
      */
     public void reduce(IntWritable key
-                     , Iterator<Node> value
-                     , OutputCollector<IntWritable, Node> output
+                     , Iterator<BFSNode> value
+                     , OutputCollector<IntWritable, BFSNode> output
                      , Reporter reporter
                      )
     throws IOException
@@ -89,14 +89,14 @@ implements Reducer<IntWritable, Node, IntWritable, Node>
         }
       
         //Hand it a blank BFSStatus (infinity, no path, not target)
-        Node node = value.next();
+        BFSNode node = value.next();
         node.setValue(new BFSStatus());
 
         //if target nodes contains the current ID:
         if(targetNodes.contains(key.get()))
         {
             //Set it as a target node
-            ((BFSStatus)(node.getValue())).setTarget(true);
+            node.setTarget(true);
         }
 
         //if the node is the source
