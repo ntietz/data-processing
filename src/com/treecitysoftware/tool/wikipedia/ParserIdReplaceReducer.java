@@ -28,7 +28,7 @@ implements Reducer<Text, PageOrEdge, IntWritable, PageOrEdge>
     throws IOException
     {
         String title = key.toString();
-        List<Integer> targets = new ArrayList<Integer>();
+        List<Integer> originators = new ArrayList<Integer>();
         WikiPage page = null;
 
         while (values.hasNext())
@@ -38,10 +38,12 @@ implements Reducer<Text, PageOrEdge, IntWritable, PageOrEdge>
             if (obj.isPage())
             {
                 page = obj.page;
+                reporter.incrCounter("HANDLED", "PAGE", 1);
             }
             else if (obj.isEdge())
             {
-                targets.add(obj.id);
+                originators.add(obj.id);
+                reporter.incrCounter("HANDLED", "EDGE", 1);
             }
             else
             {
@@ -58,7 +60,7 @@ implements Reducer<Text, PageOrEdge, IntWritable, PageOrEdge>
             output.collect(new IntWritable(page.getId()), new PageOrEdge(page));
             reporter.incrCounter("NUMBER", "NODES-WRITTEN", 1);
 
-            for (Integer each : targets)
+            for (Integer each : originators)
             {
                 output.collect(new IntWritable(each), new PageOrEdge(targetId));
                 reporter.incrCounter("NUMBER", "EDGES-WRITTEN", 1);
