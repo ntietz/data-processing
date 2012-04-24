@@ -8,12 +8,12 @@ public class PageLineBuilder {
 	private String line;
 	private List<PageBuilder> allPages;
 	
-	PageLineBuilder()
+	private PageLineBuilder()
 	{
 		//disabled: not safe		
 	}
 	
-	PageLineBuilder(int numberOfPages)
+	public PageLineBuilder(int numberOfPages)
 	{
 		/*
 		header = "INSERT INTO `page` VALUES ";
@@ -27,9 +27,8 @@ public class PageLineBuilder {
 	PageLineBuilder(List<PageBuilder> p)
 	{
 		allPages = p;
-		header = new String("INSERT INTO `page` VALUES ");
-		line = new String("");
-		line += header;
+		header = "INSERT INTO `page` VALUES ";
+		line = header;
 		buildLine();
 	}
 	

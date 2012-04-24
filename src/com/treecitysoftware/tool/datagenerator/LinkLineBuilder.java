@@ -15,20 +15,18 @@ public class LinkLineBuilder {
 	public LinkLineBuilder(List<LinkBuilder> l)
 	{
 		links = l;
-		header = new String("INSERT INTO `pagelinks` VALUES ");
-		line = new String(header);
+		header = "INSERT INTO `pagelinks` VALUES ";
+		line = header;
 		buildLine();
 	}
 	
 	private void buildLine() 
 	{
-		for(int i = 0; i < links.size(); ++i)
+		for(int index = 0; index < links.size() - 1; ++index)
 		{
-			line += links.get(i).getLink();
-			if(i < links.size() - 1)
-				line += ",";
+			line += links.get(index).getLink() + ",";
 		}
-		line += ";";
+        line += links.get(links.size() - 1).getLink() + ";";
 	}
 	
 	public String getLine()
