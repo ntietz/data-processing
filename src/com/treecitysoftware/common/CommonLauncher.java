@@ -21,11 +21,11 @@ public class CommonLauncher
             System.exit(1);
         }
 
-        int numberOfArguments = args.length - 1;
+        int numberOfArguments = args.length - 2;
         String[] arguments = new String[numberOfArguments];
-        System.arraycopy(args, 1, arguments, 0, numberOfArguments);
+        System.arraycopy(args, 2, arguments, 0, numberOfArguments);
 
-        String command = args[0];
+        String command = args[1];
 
         System.out.println(command);
 

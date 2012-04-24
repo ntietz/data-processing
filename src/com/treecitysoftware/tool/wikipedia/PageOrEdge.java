@@ -12,6 +12,7 @@ implements Writable
 {
     public WikiPage page;
     public Integer id;
+    boolean isPage = false;
 
     public PageOrEdge()
     {
@@ -23,35 +24,36 @@ implements Writable
     {
         page = p;
         id = null;
+        isPage = true;
     }
 
     public PageOrEdge(Integer i)
     {
         page = null;
         id = i;
+        isPage = false;
     }
 
     public boolean isPage()
     {
-        return page != null;
+        return isPage;
     }
 
     public boolean isEdge()
     {
-        return id != null;
+        return !isPage;
     }
 
     public void write(DataOutput out)
     throws IOException
     {
-        if (page != null)
+        out.writeBoolean(isPage);
+        if (isPage)
         {
-            out.writeUTF("p");
             page.write(out);
         }
         else
         {
-            out.writeUTF("e");
             out.writeInt(id);
         }
     }
@@ -59,8 +61,8 @@ implements Writable
     public void readFields(DataInput in)
     throws IOException
     {
-        String type = in.readUTF();
-        if (type.equals("p"))
+        isPage = in.readBoolean();
+        if (isPage)
         {
             page = new WikiPage();
             page.readFields(in);
