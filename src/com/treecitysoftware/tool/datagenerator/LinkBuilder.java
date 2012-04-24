@@ -14,16 +14,17 @@ public class LinkBuilder {
 	
 	public LinkBuilder(PageBuilder from, PageBuilder to)
 	{
-		link = new String("");
-		pl_from = new String(from.getId());
+		link = "";
+		pl_from = from.getId();
 		pl_namespace = "0";
-		pl_title = new String(to.getTitle());
+		pl_title = to.getTitle();
 		
 		buildLink();
 	}
 	
 	private void buildLink()
 	{
+        link = "";
 		link += "(";
 		link += pl_from;
 		link += ",";

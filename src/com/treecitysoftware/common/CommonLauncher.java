@@ -2,8 +2,7 @@ package com.treecitysoftware.common;
 
 import com.treecitysoftware.algorithm.pagerank.*;
 import com.treecitysoftware.tool.wikipedia.*;
-import com.treecitysoftware.data.*;
-//TODO remove data
+import com.treecitysoftware.tool.datagenerator.*;
 
 import java.io.*;
 
@@ -12,7 +11,7 @@ public class CommonLauncher
     public static void main(String... args)
     throws IOException
     {
-        if (args.length < 3)
+        if (args.length < 1)
         {
             System.out.println("Choices:");
             System.out.println("    parse");
@@ -42,7 +41,7 @@ public class CommonLauncher
         else if (command.equals("make-test-data"))
         {
             System.out.println("generating");
-
+            TestDataGenerator.main(arguments);
         }
     }
 }
