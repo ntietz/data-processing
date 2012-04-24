@@ -1,4 +1,4 @@
-package com.treecitysoftware.data;
+package com.treecitysoftware.tool.datagenerator;
 
 public class LinkBuilder {
 	private String pl_from;
@@ -7,12 +7,12 @@ public class LinkBuilder {
 	
 	private String link;
 	
-	LinkBuilder()
+	private LinkBuilder()
 	{
 		// NOT SAFE
 	}
 	
-	LinkBuilder(PageBuilder from, PageBuilder to)
+	public LinkBuilder(PageBuilder from, PageBuilder to)
 	{
 		link = new String("");
 		pl_from = new String(from.getId());

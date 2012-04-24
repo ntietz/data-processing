@@ -1,4 +1,4 @@
-package com.treecitysoftware.data;
+package com.treecitysoftware.tool.datagenerator;
 
 public class PageBuilder {
 	private int 	page_id;
@@ -15,12 +15,12 @@ public class PageBuilder {
 	
 	private String page;
 	
-	PageBuilder()
+	private PageBuilder()
 	{
 		//There is no safe default
 	}
 	
-	PageBuilder(int id)
+	public PageBuilder(int id)
 	{
 		page = new String("");
 		page_id = id;
