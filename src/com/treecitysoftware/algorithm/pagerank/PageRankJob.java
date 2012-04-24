@@ -1,8 +1,11 @@
 package com.treecitysoftware.algorithm.pagerank;
 
+import java.io.*;
+
 public class PageRankJob
 {
     public static void main(String... args)
+    throws IOException
     {
         // TODO fix the input paths
         if (args.length < 4)
