@@ -22,16 +22,16 @@ public class PageBuilder {
 	
 	public PageBuilder(int id)
 	{
-		page = new String("");
+		page = "";
 		page_id = id;
 		page_namespace = 0;
-		page_title = new String(new RandomWikiTitle().getTitle());
-		page_restrictions = new String("");
+		page_title = (new RandomWikiTitle()).getTitle();
+		page_restrictions = "";
 		page_counter = 0;
 		page_is_redirect = 0;
 		page_is_new = 0;
 		page_random = 0;
-		page_touched = new String("684643138");
+		page_touched = "684643138";
 		page_latest = 0;
 		page_len = 0;
 		
