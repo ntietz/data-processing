@@ -17,15 +17,16 @@ public class CommonLauncher
             System.out.println("    parse");
             System.out.println("    view-parsed-graph");
             System.out.println("    make-test-data");
+            System.out.println("    pagerank");
             System.out.println("");
             System.exit(1);
         }
 
-        int numberOfArguments = args.length - 2;
+        int numberOfArguments = args.length - 1;
         String[] arguments = new String[numberOfArguments];
-        System.arraycopy(args, 2, arguments, 0, numberOfArguments);
+        System.arraycopy(args, 1, arguments, 0, numberOfArguments);
 
-        String command = args[1];
+        String command = args[0];
 
         System.out.println(command);
 
@@ -42,6 +43,11 @@ public class CommonLauncher
         {
             System.out.println("generating");
             TestDataGenerator.main(arguments);
+        }
+        else if (command.equals("pagerank"))
+        {
+            System.out.println("page ranking");
+            PageRankDriver.main(arguments);
         }
     }
 }
