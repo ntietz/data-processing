@@ -22,7 +22,7 @@ implements Writable
      * neighbors stores the ids of all the adjacent nodes.
      * Each of these ids should exist as the id field of another node.
      */
-    private List<Integer> neighbors;
+    private Set<Integer> neighbors;
 
     /**
      * There is no safe or desired default behavior; this is only public so Hadoop works correctly.
@@ -40,7 +40,7 @@ implements Writable
     {
         id = i;
         title = t;
-        neighbors = new ArrayList<Integer>();
+        neighbors = new TreeSet<Integer>();
     }
 
     /**
@@ -48,7 +48,7 @@ implements Writable
      * @param v value of the new node
      * @param n list of neighbor ids of the new node
      */
-    public WikiPage(int i, String t, List<Integer> n)
+    public WikiPage(int i, String t, Set<Integer> n)
     {
         id = i;
         title = t;
@@ -82,7 +82,7 @@ implements Writable
     /**
      * @return  the neighbors of the node
      */
-    public List<Integer> getNeighbors()
+    public Set<Integer> getNeighbors()
     {
         return neighbors;
     }
@@ -155,9 +155,9 @@ implements Writable
         out.writeUTF(title);
         out.writeInt(id);
         out.writeInt(neighbors.size());
-        for (int index = 0; index < neighbors.size(); ++index)
+        for (Integer each : neighbors)
         {
-            out.writeInt(neighbors.get(index));
+            out.writeInt(each);
         }
     }
 
@@ -171,7 +171,7 @@ implements Writable
         title = in.readUTF();
         id = in.readInt();
         int size = in.readInt();
-        neighbors = new ArrayList(size);
+        neighbors = new HashSet();
         for (int index = 0; index < size; ++index)
         {
             neighbors.add(in.readInt());
