@@ -30,7 +30,7 @@ implements Writable
      * neighbors stores the ids of all the adjacent nodes.
      * Each of these ids should exist as the id field of another node.
      */
-    private List<Integer> neighbors;
+    private Set<Integer> neighbors;
 
     /**
      * There is no safe or desired default behavior; this is only public so Hadoop works correctly.
@@ -48,7 +48,7 @@ implements Writable
     {
         id = i;
         payload = v;
-        neighbors = new ArrayList<Integer>();
+        neighbors = new TreeSet<Integer>();
     }
 
     /**
@@ -56,7 +56,7 @@ implements Writable
      * @param v value of the new node
      * @param n list of neighbor ids of the new node
      */
-    public BFSNode(int i, BFSStatus v, List<Integer> n)
+    public BFSNode(int i, BFSStatus v, Set<Integer> n)
     {
         id = i;
         payload = v;
@@ -106,7 +106,7 @@ implements Writable
     /**
      * @return  the neighbors of the node
      */
-    public List<Integer> getNeighbors()
+    public Set<Integer> getNeighbors()
     {
         return neighbors;
     }
@@ -180,9 +180,9 @@ implements Writable
         out.writeInt(id);
         out.writeBoolean(target);
         out.writeInt(neighbors.size());
-        for (int index = 0; index < neighbors.size(); ++index)
+        for (Integer each : neighbors)
         {
-            out.writeInt(neighbors.get(index));
+            out.writeInt(each);
         }
     }
 
@@ -198,7 +198,7 @@ implements Writable
         id = in.readInt();
         target = in.readBoolean();
         int size = in.readInt();
-        neighbors = new ArrayList(size);
+        neighbors = new TreeSet();
         for (int index = 0; index < size; ++index)
         {
             neighbors.add(in.readInt());
