@@ -17,7 +17,7 @@ import java.util.*;
  */
 public class ParallelBFSReducer
 extends MapReduceBase
-implements Reducer<IntWritable, BFSNodeOrStatus, IntWritable, BFSNode>
+implements Reducer<IntWritable, BFSNodeOrChange, IntWritable, BFSNode>
 {
     /**
      * Receives either (id,node) or (id, status) pairs from the mappers and 
@@ -28,40 +28,90 @@ implements Reducer<IntWritable, BFSNodeOrStatus, IntWritable, BFSNode>
      * @param reporter The default reporting object
      */
     public void reduce(IntWritable key
-                     , Iterator<BFSNodeOrStatus> values
+                     , Iterator<BFSNodeOrChange> values
                      , OutputCollector<IntWritable, BFSNode> output
                      , Reporter reporter
                      )
     throws IOException
     {
-        int shortestDistance = Integer.MAX_VALUE;
-        List<Integer> pathToSource = null;
-        BFSNode resultNode = null;
+        //Handles for the Node, the smallest Distance received,
+        // and the set of nodes we've received from.
+        BFSNode keyNode = null;
+        int smallestDistance = Integer.MAX_VALUE;
+        Set<Integer> receivedFrom = TreeSet<Integer>();
 
-        while(values.hasNext())
+        //Reclaim the information received
+        while (values.hasNext())
         {
-            BFSNodeOrStatus val = values.next();
-
-            if(val.isNode())
+            BFSNodeOrChange incoming = values.next();
+            
+            if (incoming.isNode())
             {
-                resultNode = val.node;
+                keyNode = incoming.node;
             }
 
-            if(val.isStatus())
+            if (incoming.isChange())
             {
-                BFSStatus stat = val.status;
-                int thisDistance = stat.getDistance();
-                if(thisDistance < shortestDistance)
+                //NOTE: May be a troubled spot but doubtful
+                if(each.change.getDistance() <= smallestDistance)
                 {
-                    shortestDistance = thisDistance;
-                    pathToSource = stat.getPath();
+                    smallestDistance = each.change.getDistance();
+                    receivedFrom.add(each.change.getSendingNode());
                 }
             }
         }
 
-        //Construct the output
-        BFSStatus statusToSend = new BFSStatus(shortestDistance, pathToSource);
-        resultNode.setValue(statusToSend);
-        output.collect(key, resultNode);
+        //If d is infinity, we didn't get anything
+        if (smallestDistance == Integer.MAX_VALUE)
+        {
+            output.collect(key, keyNode);
+            return;
+        }
+
+        //if d changed, we received changes!
+        if (smallestDistance != Integer.MAX_VALUE)
+        {
+            BFSStatus keyNodePayload = keyNode.getValue();
+
+            //If our node already has a value other than infinity
+            if (keyNodePayload.getDistance() != Integer.MAX_VALUE)
+            {
+                //We already have the shortest path
+                output.collect(key, keyNode);
+                return;
+            }
+
+            // If the node is still infinity, not discovered
+            if (keyNodePayload.getDistance() == Integer.MAX_VALUE)
+            {
+                //set distance to source
+                keyNodePayload.setDistance(smallestDistance);
+
+                //Notify only those who haven't called us
+                Set<Integer> nodesToNotify = TreeSet<Integer>(keyNode.getNeighbors());
+                nodesToNotify.removeAll(receivedFrom);
+
+                if (nodesToNotify.size() == 0)
+                {
+                    //No one to notify that hasn't JUST sent us info
+                    keyNodePayload.setExpansion(false);
+                }
+                else
+                {
+                    //There are nodes to notify, so we should expand
+                    keyNodePayload.setExpansion(true);
+                }
+
+                //After all of this we set the expansion set
+                //whether it's got nodes or not
+                keyNodePayload.setExpansionSet(nodesToNotify);
+
+                //attach the new status to the key node
+                keyNode.setValue(keyNodePayload);
+
+                //Emit
+                output.collect(key, keyNode);
+            }
+        }
     }
 }
