@@ -19,7 +19,7 @@ extends Writable
     /**
      * Holds the distance to transmit
      */
-    private int distance
+    private int distance;
 
     /**
      * Constructs an empty change object
