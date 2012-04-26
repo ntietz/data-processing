@@ -33,6 +33,12 @@ implements Reducer<IntWritable, BFSNode, IntWritable, BFSNode>
     private String targetNodeFileName;
 
     /**
+     * Number of nodes to take from the top of Target's 
+     * sequence file
+     */
+    private int targetLength;
+
+    /**
      * Set that is created to hold the nodes in the target file
      */
     private Set<Integer> targetNodes;
@@ -47,6 +53,7 @@ implements Reducer<IntWritable, BFSNode, IntWritable, BFSNode>
         sourceNodeID = Integer.valueOf(conf.get("sourceNodeID"));
         targetNodeFileName = conf.get("targetNodeFileName");
         targetNodes = new TreeSet<Integer>();
+        targetLength = Integer.valueOf(conf.get("targetLength"));
     }
 
     /**
@@ -72,39 +79,42 @@ implements Reducer<IntWritable, BFSNode, IntWritable, BFSNode>
             //Load in all of the target nodes into the tree set
             first = false;
 
-            FileSystem fs = FileSystem.get(new Configuration());
-            BufferedReader in = new BufferedReader(
-                                    new InputStreamReader(
-                                        fs.open(
-                                            new Path(
-                                                targetNodeFileName
-                                ))));
+            Configuration conf = new Configuration()
+            FileSystem fs = FileSystem.get(conf);
+            
+            SequenceFile.Reader reader = 
+                new SequenceFile.Reader( fs
+                                       , new Path(targetNodeFileName)
+                                       , conf
+                                       );
 
-            String line = in.readLine();
+            IntWritable id = new IntWritable();
+            WikiPage page = new WikiPage();
 
-            while (line != null)
+            int idx = 0;
+            while ((reader.next(id, page)) && (idx < targetLength))
             {
-                targetNodes.add(Integer.valueOf(line));
+                //Construct the set of //Construct the set of target id's
+                targetNodes.add(new Integer(id.get()));
+                reporter.incrCounter("PREPROC", "TARGETLENGTH", 1);
             }
         }
       
-        //Hand it a blank BFSStatus (infinity, no path, not target)
+        // Get the node associated with the ID
         BFSNode node = value.next();
-        node.setValue(new BFSStatus());
 
-        //if target nodes contains the current ID:
+        //if target node set contains the current ID:
         if(targetNodes.contains(key.get()))
         {
             //Set it as a target node
             node.setTarget(true);
         }
 
-        //if the node is the source
+        //if the node ID is the source ID
         if(key.get() == sourceNodeID)
         {
-            //set the path to itself, and set the distance to 0.
-            ((BFSStatus)(node.getValue())).setDistance(0);
-            ((BFSStatus)(node.getValue())).getPath().add(key.get());
+            BFSStatus sourceStatus = new BFSStatus(0, true, node.getNeighbors());
+            node.setValue(sourceStatus);
         }
 
         //Emit the nodeID and Node
