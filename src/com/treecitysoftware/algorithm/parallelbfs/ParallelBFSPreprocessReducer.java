@@ -79,7 +79,7 @@ implements Reducer<IntWritable, BFSNode, IntWritable, BFSNode>
             //Load in all of the target nodes into the tree set
             first = false;
 
-            Configuration conf = new Configuration()
+            Configuration conf = new Configuration();
             FileSystem fs = FileSystem.get(conf);
             
             SequenceFile.Reader reader = 
