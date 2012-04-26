@@ -86,7 +86,7 @@ implements Writable
      * @return The set of nodes we need to send data to if the
      * page needs to expand.
      */
-    public Set<Integer> whoToSendTo()
+    public Set<Integer> getExpansionSet()
     {
         return whoTo;
     }
@@ -95,7 +95,7 @@ implements Writable
      * @param nodesToSendTo The nodes we want to send data to when
      * we expand.
      */
-    public void setWhoTo(Set<Integer> nodesToSendTo)
+    public void setExpansionSet(Set<Integer> nodesToSendTo)
     {
         whoTo = nodesToSendTo;
     }
