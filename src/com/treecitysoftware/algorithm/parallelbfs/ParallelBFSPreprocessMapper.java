@@ -28,9 +28,12 @@ implements Mapper<IntWritable, WikiPage, IntWritable, BFSNode>
                   )
     throws IOException
     {
-        BFSNode n = new BFSNode(key.get()
-                              , new BFSStatus()
-                              , value.getNeighbors());
+        BFSNode n = new BFSNode( key.get()
+                               , new BFSStatus()
+                               , value.getNeighbors()
+                               );
+        
+        reporter.incrCounter("PREPROC","NODES", 1);
         output.collect(key, n);
     }
 }
