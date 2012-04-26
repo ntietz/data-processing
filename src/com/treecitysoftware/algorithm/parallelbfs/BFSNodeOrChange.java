@@ -104,7 +104,7 @@ implements Writable
     public void readFields(DataInput in)
     throws IOException
     {
-        isNode = in.readBoolean
+        isNode = in.readBoolean();
         if (isNode)
         {
             node.readFields(in);
