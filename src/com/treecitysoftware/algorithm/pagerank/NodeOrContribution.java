@@ -13,6 +13,7 @@ implements Writable
 {
     public PageRankNode node;
     public Contribution contribution;
+    boolean isNode = false;
 
     public NodeOrContribution()
     {
@@ -24,35 +25,36 @@ implements Writable
     {
         node = p;
         contribution = null;
+        isNode = true;
     }
 
     public NodeOrContribution(Contribution c)
     {
         node = null;
         contribution = c;
+        isNode = false;
     }
 
     public boolean isNode()
     {
-        return node != null;
+        return isNode;
     }
 
     public boolean isContribution()
     {
-        return contribution != null;
+        return !isNode;
     }
 
     public void write(DataOutput out)
     throws IOException
     {
+        out.writeBoolean(isNode);
         if (node != null)
         {
-            out.writeUTF("p");
             node.write(out);
         }
         else
         {
-            out.writeUTF("c");
             contribution.write(out);
         }
     }
@@ -60,8 +62,8 @@ implements Writable
     public void readFields(DataInput in)
     throws IOException
     {
-        String type = in.readUTF();
-        if (type.equals("p"))
+        isNode = in.readBoolean();
+        if (isNode)
         {
             node = new PageRankNode();
             node.readFields(in);

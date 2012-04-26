@@ -12,7 +12,7 @@ public class TopNodeReducer
 extends MapReduceBase
 implements Reducer<DoubleWritable, IntWritable, IntWritable, DoubleWritable>
 {
-    private final int numberToOutput = 50;
+    private final int numberToOutput = 5000;
     private static int numberOutputed = 0;
 
     public void reduce( DoubleWritable key
