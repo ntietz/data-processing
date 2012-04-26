@@ -64,7 +64,7 @@ public class PageRankDriver
         String outputPath = outputBasePath + "/" + round;
 
         double lostWeight = 0.0;
-        int maxRounds = 20;
+        int maxRounds = 5;
         double threshold = 0.05;
 
         while (keepGoing)

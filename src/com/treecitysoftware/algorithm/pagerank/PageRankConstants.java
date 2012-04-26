@@ -2,6 +2,6 @@ package com.treecitysoftware.algorithm.pagerank;
 
 public class PageRankConstants
 {
-    public static final long scalingFactor = 1000;
+    public static final long scalingFactor = 10000;
 }
 

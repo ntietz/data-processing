@@ -82,7 +82,7 @@ implements Reducer<IntWritable, NodeOrContribution, IntWritable, PageRankNode>
 
         // collect the differences in scores for convergence checking
         Double difference = Math.abs(score - node.getValue());
-        long scaledChange = PageRankConstants.scalingFactor * difference.longValue();
+        long scaledChange = (new Double(PageRankConstants.scalingFactor * difference)).longValue();
         reporter.incrCounter("WEIGHT", "CHANGED", scaledChange);
 
         node.setValue(score);

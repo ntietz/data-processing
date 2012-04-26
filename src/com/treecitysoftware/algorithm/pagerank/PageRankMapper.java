@@ -36,11 +36,12 @@ implements Mapper<IntWritable, PageRankNode, IntWritable, NodeOrContribution>
         {
             Contribution contribution = new Contribution(currentScore / numberOfNeighbors);
 
-            List<Integer> neighbors = value.getNeighbors();
+            Set<Integer> neighbors = value.getNeighbors();
             for (Integer each : neighbors)
             {
                 IntWritable outputKey = new IntWritable(each);
                 output.collect(outputKey, new NodeOrContribution(contribution));
+                reporter.incrCounter("SENT", "CONTRIBUTION", 1);
             }
         }
 
