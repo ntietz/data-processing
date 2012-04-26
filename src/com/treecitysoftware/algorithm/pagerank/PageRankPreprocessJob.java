@@ -6,29 +6,30 @@ import org.apache.hadoop.fs.*;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapred.*;
 
+import java.io.*;
+
 public class PageRankPreprocessJob
 {
-    public void main(String... args)
+    public static void main(String... args)
+    throws IOException
     {
         String inputPath = args[0];
         String outputPath = args[1];
         int numberOfReducers = Integer.valueOf(args[2]);
         long numberOfNodes = Long.valueOf(args[3]);
-        double lostWeight = 0.0;
-        double dampingFactor = Double.valueOf(args[4]);
 
-        // TODO finish this job
+        JobConf conf = getJobConfiguration(inputPath, outputPath, numberOfReducers, numberOfNodes);
+        RunningJob job = JobClient.runJob(conf);
+        job.waitForCompletion();
     }
 
-    public JobConf getJobConfiguration( String inputPath
+    public static JobConf getJobConfiguration( String inputPath
                                       , String outputPath
                                       , int numberOfReducers
                                       , long numberOfNodes
-                                      , double lostWeight
-                                      , double dampingFactor
                                       )
     {
-        JobConf conf = new JobConf(PageRankDriver.class);
+        JobConf conf = new JobConf(PageRankPreprocessJob.class);
         conf.setJobName("pagerank");
 
         conf.setMapOutputKeyClass(IntWritable.class);
@@ -46,8 +47,6 @@ public class PageRankPreprocessJob
         conf.setNumReduceTasks(numberOfReducers);
 
         conf.set("numberOfNodes", Long.toString(numberOfNodes));
-        conf.set("dampingFactor", Double.toString(dampingFactor));
-        conf.set("adjustmentBonus", Double.toString(lostWeight / numberOfNodes));
 
         SequenceFileInputFormat.setInputPaths(conf, new Path(inputPath));
         SequenceFileOutputFormat.setOutputPath(conf, new Path(outputPath));

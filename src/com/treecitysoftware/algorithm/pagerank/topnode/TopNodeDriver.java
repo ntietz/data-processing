@@ -37,8 +37,8 @@ public class TopNodeDriver
         JobConf conf = new JobConf(TopNodeDriver.class);
         conf.setJobName("topnodes");
 
-        conf.setMapOutputKeyClass(IntWritable.class);
-        conf.setMapOutputValueClass(PageRankNode.class);
+        conf.setMapOutputKeyClass(DoubleWritable.class);
+        conf.setMapOutputValueClass(IntWritable.class);
 
         conf.setOutputKeyClass(IntWritable.class);
         conf.setOutputValueClass(DoubleWritable.class);

@@ -12,8 +12,8 @@ public class TopNodeReducer
 extends MapReduceBase
 implements Reducer<DoubleWritable, IntWritable, IntWritable, DoubleWritable>
 {
-    private final int numberToOutput = 5000;
-    private int numberOutputed = 0;
+    private final int numberToOutput = 50;
+    private static int numberOutputed = 0;
 
     public void reduce( DoubleWritable key
                       , Iterator<IntWritable> values
@@ -29,6 +29,9 @@ implements Reducer<DoubleWritable, IntWritable, IntWritable, DoubleWritable>
             IntWritable id = values.next();
 
             output.collect(id, score);
+
+            reporter.incrCounter("NUMBER", "OUTPUT", 1);
+            ++numberOutputed;
         }
     }
 }
