@@ -1,8 +1,9 @@
 package com.treecitysoftware.common;
 
 import com.treecitysoftware.algorithm.pagerank.*;
-import com.treecitysoftware.tool.wikipedia.*;
+import com.treecitysoftware.algorithm.pagerank.topnode.*;
 import com.treecitysoftware.tool.datagenerator.*;
+import com.treecitysoftware.tool.wikipedia.*;
 
 import java.io.*;
 
@@ -48,6 +49,11 @@ public class CommonLauncher
         {
             System.out.println("page ranking");
             PageRankDriver.main(arguments);
+        }
+        else if (command.equals("topnodes"))
+        {
+            System.out.println("top nodes");
+            TopNodeDriver.main(arguments);
         }
     }
 }
