@@ -19,6 +19,7 @@ public class CommonLauncher
             System.out.println("    view-parsed-graph");
             System.out.println("    make-test-data");
             System.out.println("    pagerank");
+            System.out.println("    view-pagerank");
             System.out.println("    pre-pagerank");
             System.out.println("    topnodes");
             System.out.println("    view-topnodes");
@@ -67,6 +68,11 @@ public class CommonLauncher
         {
             System.out.println("view topnodes");
             TopNodeViewer.main(arguments);
+        }
+        else if (command.equals("view-pagerank"))
+        {
+            System.out.println("viewing pagerank");
+            PageRankGraphViewer.main(arguments);
         }
     }
 }
