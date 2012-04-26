@@ -1,8 +1,9 @@
 package com.treecitysoftware.common;
 
 import com.treecitysoftware.algorithm.pagerank.*;
-import com.treecitysoftware.tool.wikipedia.*;
+import com.treecitysoftware.algorithm.pagerank.topnode.*;
 import com.treecitysoftware.tool.datagenerator.*;
+import com.treecitysoftware.tool.wikipedia.*;
 
 import java.io.*;
 
@@ -18,6 +19,9 @@ public class CommonLauncher
             System.out.println("    view-parsed-graph");
             System.out.println("    make-test-data");
             System.out.println("    pagerank");
+            System.out.println("    pre-pagerank");
+            System.out.println("    topnodes");
+            System.out.println("    view-topnodes");
             System.out.println("");
             System.exit(1);
         }
@@ -48,6 +52,21 @@ public class CommonLauncher
         {
             System.out.println("page ranking");
             PageRankDriver.main(arguments);
+        }
+        else if (command.equals("pre-pagerank"))
+        {
+            System.out.println("pagerank preprocessing");
+            PageRankPreprocessJob.main(arguments);
+        }
+        else if (command.equals("topnodes"))
+        {
+            System.out.println("top nodes");
+            TopNodeDriver.main(arguments);
+        }
+        else if (command.equals("view-topnodes"))
+        {
+            System.out.println("view topnodes");
+            TopNodeViewer.main(arguments);
         }
     }
 }

@@ -64,7 +64,7 @@ public class PageRankDriver
         String outputPath = outputBasePath + "/" + round;
 
         double lostWeight = 0.0;
-        int maxRounds = 20;
+        int maxRounds = 5;
         double threshold = 0.05;
 
         while (keepGoing)
@@ -82,7 +82,7 @@ public class PageRankDriver
             job.waitForCompletion();
 
             long scaledChange = job.getCounters().findCounter("WEIGHT", "CHANGED").getCounter();
-            double change = ((double)scaledChange) / PageRankConstants.scalingFactor;
+            double change = ((double)scaledChange) / (PageRankConstants.scalingFactor * numberOfNodes);
 
             ++round;
             keepGoing = (round < maxRounds) && change > threshold;
