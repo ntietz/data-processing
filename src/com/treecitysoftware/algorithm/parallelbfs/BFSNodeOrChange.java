@@ -28,6 +28,11 @@ implements Writable
     public BFSChange change;
 
     /**
+     * Keeps track if the object contains a node or not
+     */
+    boolean isNode = false;
+
+    /**
      * Constructs an empty BFSNodeOrChange
      */
     public BFSNodeOrChange()
@@ -44,6 +49,7 @@ implements Writable
     {
         node = n;
         change = null;
+        isNode = true;
     }
 
     /**
@@ -54,6 +60,7 @@ implements Writable
     {
         node = null;
         change = c;
+        isNode = false;
     }
 
     /**
@@ -61,7 +68,7 @@ implements Writable
      */
     public boolean isNode()
     {
-        return node != null;
+        return isNode;
     }
 
     /**
@@ -69,7 +76,7 @@ implements Writable
      */
     public boolean isChange()
     {
-        return change != null;
+        return !isNode;
     }
 
     /**
@@ -79,14 +86,13 @@ implements Writable
     public void write(DataOutput out)
     throws IOException
     {
-        if (node != null)
+        out.writeBoolean(isNode);
+        if (isNode)
         {
-            out.writeUTF("n");
             node.write(out);
         }
         else
         {
-            out.writeUTF("c");
             change.write(out);
         }
     }
@@ -98,15 +104,13 @@ implements Writable
     public void readFields(DataInput in)
     throws IOException
     {
-        String type = in.readUTF();
-        if (type.equals("n"))
+        isNode = in.readBoolean
+        if (isNode)
         {
-            node = new BFSNode();
             node.readFields(in);
         }
         else
         {
-            change = new BFSChange();
             change.readFields(in);
         }
     }
