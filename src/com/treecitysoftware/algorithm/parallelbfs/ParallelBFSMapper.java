@@ -15,15 +15,8 @@ import java.util.*;
  */
 public class ParallelBFSMapper
 extends MapReduceBase
-implements Mapper<IntWritable, BFSNode, IntWritable, BFSNodeOrStatus>
+implements Mapper<IntWritable, BFSNode, IntWritable, BFSNodeOrChange>
 {
-    private int maxDepth;
-
-    public void configure(JobConf conf)
-    {
-        maxDepth = Integer.valueOf(conf.get("maxDepth"));
-    }
-
     /**
      * Takes in (id, node) pairs and propogates their distance values
      * to each of of their neighbors.
@@ -35,48 +28,33 @@ implements Mapper<IntWritable, BFSNode, IntWritable, BFSNodeOrStatus>
      */
     public void map(IntWritable key
                   , BFSNode value
-                  , OutputCollector<IntWritable, BFSNodeOrStatus> output
+                  , OutputCollector<IntWritable, BFSNodeOrChange> output
                   , Reporter reporter
                   )
     throws IOException
     {
-        //Get the distance so far
-        BFSStatus nodestatus = value.getValue();
-        int distanceSoFar = nodestatus.getDistance();
+        BFSStatus currentPayload = value.getValue();
         
-        //If it's not infinity, and the distance isn't too large, continue
-        if((distanceSoFar != Integer.MAX_VALUE) && ((distanceSoFar + 1) < maxDepth))
+        if (currentPayload.needsExpansion())
         {
-            //Get the path from the current node
-            List<Integer> pathToStart = nodestatus.getPath();
-        
-            // go through the values, emitting the new distances and paths along the way
-            for (int id : value.getNeighbors())
-            {
-                List<Integer> pathToSend = new ArrayList(pathToStart);
-                pathToSend.add(id);
-                
-                BFSStatus statusToSend = new BFSStatus(distanceSoFar + 1, pathToSend);
+            int dist = currentPayload.getDistance();
 
-                output.collect(new IntWritable(id), new BFSNodeOrStatus(statusToSend));
+            for (Integer eachID : currentPayload.getExpansionSet())
+            {
+                output.collect( new IntWritable(eachID.intValue())
+                              , new BFSNodeOrChange(new BFSChange( key.get(), (dist + 1)))
+                              );
             }
 
-            //Then emit this node
-            output.collect(key, new BFSNodeOrStatus(value));
-        }
-        else
-        {
-            //Well, either this node is not discovered yet, or we've hit the bounds
-            //So, we don't send any statuses to the neighbors, we just emit this node
-            output.collect(key, new BFSNodeOrStatus(value));
+            currentPayload.setExpansion(false);
 
-            if(distanceSoFar != Integer.MAX_VALUE)
-            {
-                //If we got here and the integer is not infinity, it means it's too deep
-                //Increment the graph bound counter
+            Set<Integer> s = currentPayload.getExpansionSet();
+            s.clear();
+            currentPayload.setExpansionSet(s);
 
-                // TODO : Increment a counter here
-            }
+            value.setValue(currentPayload);
         }
+        
+        output.collect(key, new BFSNodeOrChange(value));
     }
 }
