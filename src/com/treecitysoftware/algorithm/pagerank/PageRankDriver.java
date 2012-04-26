@@ -82,7 +82,7 @@ public class PageRankDriver
             job.waitForCompletion();
 
             long scaledChange = job.getCounters().findCounter("WEIGHT", "CHANGED").getCounter();
-            double change = ((double)scaledChange) / PageRankConstants.scalingFactor;
+            double change = ((double)scaledChange) / (PageRankConstants.scalingFactor * numberOfNodes);
 
             ++round;
             keepGoing = (round < maxRounds) && change > threshold;
