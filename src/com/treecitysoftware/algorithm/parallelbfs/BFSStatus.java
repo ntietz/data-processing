@@ -15,28 +15,20 @@ implements Writable
     private int distance;
 
     /**
-     * The shortest path from the starting node to this current node
-     */
-    private List<Integer> path;
-
-    /**
      * Default Constructor returns a BFSStatus with an empty path and 
      * distance at logical infinity and not a target
      */
     public BFSStatus()
     {
         distance = Integer.MAX_VALUE;
-        path = new ArrayList<Integer>();
     }
 
     /**
      * @param startingDistance The distance from the starting node
-     * @param startingPath The path from the source node to the current node
      */
-    public BFSStatus(int startingDistance, List<Integer> startingPath)
+    public BFSStatus(int startingDistance)
     {
         distance = startingDistance;
-        path = startingPath;
     }
 
     /**
@@ -58,24 +50,6 @@ implements Writable
     }
 
     /**
-     * Returns the path from the starting node to the current node
-     * @return The path from the starting node to the current node
-     */
-    public List<Integer> getPath()
-    {
-        return path;
-    }
-
-    /**
-     * Sets the path from the starting node to the current node
-     * @param newPath The path from the starting node to the current node
-     */
-    public void setPath(List<Integer> newPath)
-    {
-        path = newPath;
-    }
-
-    /**
      * Deserializes the object out to the disk
      * @param out DataOutput object used to serialize the data to disk
      */
@@ -83,11 +57,6 @@ implements Writable
     throws IOException
     {
         out.writeInt(distance);
-        out.writeInt(path.size());
-        for( Integer each : path )
-        {
-            out.writeInt(each.intValue());
-        }
     }
 
     /**
@@ -98,10 +67,5 @@ implements Writable
     throws IOException
     {
         distance = in.readInt();
-        int pathSize = in.readInt();
-        for ( int idx = 0; idx < pathSize; idx++ )
-        {
-            path.add(new Integer(in.readInt()));
-        }
     }
 }
