@@ -9,7 +9,7 @@ import java.io.*;
 import java.util.*;
 
 public class BFSChange
-extends Writable
+implements Writable
 {
     /**
      * Holds the page node id that the change came from
@@ -77,6 +77,7 @@ extends Writable
      * @param out DataOutput that serializes it out
      */
     public void write(DataOutput out)
+    throws IOException
     {
         out.writeInt(from);
         out.writeInt(distance);
@@ -87,6 +88,7 @@ extends Writable
      * @param in DataInput that serializes it in
      */
     public void readFields(DataInput in)
+    throws IOException
     {
         from = in.readInt();
         distance = in.readInt();

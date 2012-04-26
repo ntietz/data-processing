@@ -38,7 +38,7 @@ implements Reducer<IntWritable, BFSNodeOrChange, IntWritable, BFSNode>
         // and the set of nodes we've received from.
         BFSNode keyNode = null;
         int smallestDistance = Integer.MAX_VALUE;
-        Set<Integer> receivedFrom = TreeSet<Integer>();
+        Set<Integer> receivedFrom = new TreeSet<Integer>();
 
         //Reclaim the information received
         while (values.hasNext())
@@ -53,10 +53,10 @@ implements Reducer<IntWritable, BFSNodeOrChange, IntWritable, BFSNode>
             if (incoming.isChange())
             {
                 //NOTE: May be a troubled spot but doubtful
-                if(each.change.getDistance() <= smallestDistance)
+                if(incoming.change.getDistance() <= smallestDistance)
                 {
-                    smallestDistance = each.change.getDistance();
-                    receivedFrom.add(each.change.getSendingNode());
+                    smallestDistance = incoming.change.getDistance();
+                    receivedFrom.add(incoming.change.getSendingNode());
                 }
             }
         }
@@ -88,7 +88,7 @@ implements Reducer<IntWritable, BFSNodeOrChange, IntWritable, BFSNode>
                 keyNodePayload.setDistance(smallestDistance);
 
                 //Notify only those who haven't called us
-                Set<Integer> nodesToNotify = TreeSet<Integer>(keyNode.getNeighbors());
+                Set<Integer> nodesToNotify = new TreeSet<Integer>(keyNode.getNeighbors());
                 nodesToNotify.removeAll(receivedFrom);
 
                 if (nodesToNotify.size() == 0)
