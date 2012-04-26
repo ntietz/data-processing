@@ -21,6 +21,7 @@ public class CommonLauncher
             System.out.println("    pagerank");
             System.out.println("    pre-pagerank");
             System.out.println("    topnodes");
+            System.out.println("    view-topnodes");
             System.out.println("");
             System.exit(1);
         }
@@ -61,6 +62,11 @@ public class CommonLauncher
         {
             System.out.println("top nodes");
             TopNodeDriver.main(arguments);
+        }
+        else if (command.equals("view-topnodes"))
+        {
+            System.out.println("view topnodes");
+            TopNodeViewer.main(arguments);
         }
     }
 }
