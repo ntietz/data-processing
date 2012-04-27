@@ -52,8 +52,7 @@ implements Reducer<IntWritable, BFSNodeOrChange, IntWritable, BFSNode>
 
             if (incoming.isChange())
             {
-                //NOTE: May be a troubled spot but doubtful
-                if(incoming.change.getDistance() <= smallestDistance)
+                if(incoming.change.getDistance() < smallestDistance)
                 {
                     smallestDistance = incoming.change.getDistance();
                     receivedFrom.add(incoming.change.getSendingNode());
