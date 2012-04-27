@@ -109,11 +109,14 @@ implements Writable
     {
         out.writeInt(distance);
         out.writeBoolean(toExpand);
-        int cardinality = whoTo.size();
-        out.writeInt(cardinality);
-        for (Integer eachID : whoTo)
+        if (toExpand)
         {
-            out.writeInt(eachID.intValue());
+            int cardinality = whoTo.size();
+            out.writeInt(cardinality);
+            for (Integer eachID : whoTo)
+            {
+                out.writeInt(eachID.intValue());
+            }
         }
     }
 
@@ -126,10 +129,13 @@ implements Writable
     {
         distance = in.readInt();
         toExpand = in.readBoolean();
-        int cardinality = in.readInt();
-        for (int idx = 0; idx < cardinality; idx++)
+        if (toExpand)
         {
-            whoTo.add(new Integer(in.readInt()));
+            int cardinality = in.readInt();
+            for (int idx = 0; idx < cardinality; idx++)
+            {
+                whoTo.add(new Integer(in.readInt()));
+            }
         }
     }
 }
