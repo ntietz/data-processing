@@ -66,9 +66,7 @@ implements Reducer<IntWritable, BFSNodeOrChange, IntWritable, BFSNode>
             output.collect(key, keyNode);
             return;
         }
-
-        //if d changed, we received changes!
-        if (smallestDistance != Integer.MAX_VALUE)
+        else
         {
             BFSStatus keyNodePayload = keyNode.getValue();
 
@@ -79,9 +77,7 @@ implements Reducer<IntWritable, BFSNodeOrChange, IntWritable, BFSNode>
                 output.collect(key, keyNode);
                 return;
             }
-
-            // If the node is still infinity, not discovered
-            if (keyNodePayload.getDistance() == Integer.MAX_VALUE)
+            else
             {
                 //set distance to source
                 keyNodePayload.setDistance(smallestDistance);
