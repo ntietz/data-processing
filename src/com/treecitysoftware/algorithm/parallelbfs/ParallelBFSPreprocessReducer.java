@@ -22,12 +22,6 @@ implements Reducer<IntWritable, BFSNode, IntWritable, BFSNode>
     private int sourceNodeID;
 
     /**
-     * Flag for first run set at true to start, 
-     * set at false first time reduce is run
-     */
-    private boolean first = true;
-
-    /**
      * Name of the file that stores the list of target node IDs
      */
     private String targetNodeFileName;
@@ -54,6 +48,26 @@ implements Reducer<IntWritable, BFSNode, IntWritable, BFSNode>
         targetNodeFileName = conf.get("targetNodeFileName");
         targetNodes = new TreeSet<Integer>();
         targetLength = Integer.valueOf(conf.get("targetLength"));
+
+        Configuration c = new Configuration();
+        FileSystem fs = FileSystem.get(c);
+        
+        SequenceFile.Reader reader = 
+            new SequenceFile.Reader( fs
+                                   , new Path(targetNodeFileName)
+                                   , c
+                                   );
+
+        IntWritable id = new IntWritable();
+        WikiPage page = new WikiPage();
+
+        int index = 0;
+        while ((reader.next(id, page)) && (index < targetLength))
+        {
+            //Construct the set of //Construct the set of target id's
+            targetNodes.add(new Integer(id.get()));
+            ++index;
+        }
     }
 
     /**
@@ -73,33 +87,7 @@ implements Reducer<IntWritable, BFSNode, IntWritable, BFSNode>
                      )
     throws IOException
     {
-        //First time?
-        if(first)
-        {
-            //Load in all of the target nodes into the tree set
-            first = false;
 
-            Configuration conf = new Configuration();
-            FileSystem fs = FileSystem.get(conf);
-            
-            SequenceFile.Reader reader = 
-                new SequenceFile.Reader( fs
-                                       , new Path(targetNodeFileName)
-                                       , conf
-                                       );
-
-            IntWritable id = new IntWritable();
-            WikiPage page = new WikiPage();
-
-            int idx = 0;
-            while ((reader.next(id, page)) && (idx < targetLength))
-            {
-                //Construct the set of //Construct the set of target id's
-                targetNodes.add(new Integer(id.get()));
-                reporter.incrCounter("PREPROC", "TARGETLENGTH", 1);
-            }
-        }
-      
         // Get the node associated with the ID
         BFSNode node = value.next();
 
