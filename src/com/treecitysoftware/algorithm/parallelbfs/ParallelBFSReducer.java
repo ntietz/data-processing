@@ -49,8 +49,7 @@ implements Reducer<IntWritable, BFSNodeOrChange, IntWritable, BFSNode>
             {
                 keyNode = incoming.node;
             }
-
-            if (incoming.isChange())
+            else
             {
                 if(incoming.change.getDistance() < smallestDistance)
                 {
