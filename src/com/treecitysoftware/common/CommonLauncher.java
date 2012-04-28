@@ -27,6 +27,7 @@ public class CommonLauncher
             System.out.println("    pre-bfs");
             System.out.println("    bfs");
             System.out.println("    bfs-output");
+            System.out.println("    view-bfs");
             System.out.println("");
             System.exit(1);
         }
@@ -92,6 +93,11 @@ public class CommonLauncher
         {
             System.out.println("parallel bfs ouput");
             ParallelBFSOutputJob.main(arguments);
+        }
+        else if (command.equals("view-bfs"))
+        {
+            System.out.println("view bfs");
+            BFSGraphViewer.main(arguments);
         }
     }
 }

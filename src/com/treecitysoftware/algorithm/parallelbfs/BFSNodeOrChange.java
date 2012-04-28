@@ -107,10 +107,12 @@ implements Writable
         isNode = in.readBoolean();
         if (isNode)
         {
+            node = new BFSNode();
             node.readFields(in);
         }
         else
         {
+            change = new BFSChange();
             change.readFields(in);
         }
     }

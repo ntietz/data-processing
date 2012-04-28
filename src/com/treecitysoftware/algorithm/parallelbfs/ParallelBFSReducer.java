@@ -81,6 +81,9 @@ implements Reducer<IntWritable, BFSNodeOrChange, IntWritable, BFSNode>
                 //set distance to source
                 keyNodePayload.setDistance(smallestDistance);
 
+                //Well we found a node, lets make note of it
+                reporter.incrCounter("TARGETS", "FOUND",1);
+
                 //Notify only those who haven't called us
                 Set<Integer> nodesToNotify = new TreeSet<Integer>(keyNode.getNeighbors());
                 nodesToNotify.removeAll(receivedFrom);

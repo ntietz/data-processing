@@ -57,6 +57,7 @@ public class ParallelBFSJob
     {
         boolean keepGoing = true;
         int round = 0;
+        long targetsFoundSoFar = 0;
 
         String inputPath = initialInputPath;
         String outputPath = outputBasePath + "/" + round;
@@ -72,9 +73,10 @@ public class ParallelBFSJob
             job.waitForCompletion();
 
             long targetsFound = job.getCounters().findCounter("TARGETS", "FOUND").getCounter();
+            targetsFoundSoFar += targetsFound;
 
             ++round;
-            keepGoing = (round < maxDepthOfSearch) && (targetsFound < goalNumberOfTargetsFound);
+            keepGoing = (round < maxDepthOfSearch) && (targetsFoundSoFar < goalNumberOfTargetsFound);
             inputPath = outputPath;
             outputPath = outputBasePath + "/" + round;
         }
