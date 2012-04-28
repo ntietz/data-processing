@@ -44,29 +44,36 @@ implements Reducer<IntWritable, BFSNode, IntWritable, BFSNode>
      */
     public void configure(JobConf conf)
     {
-        sourceNodeID = Integer.valueOf(conf.get("sourceNodeID"));
-        targetNodeFileName = conf.get("targetNodeFileName");
-        targetNodes = new TreeSet<Integer>();
-        targetLength = Integer.valueOf(conf.get("targetLength"));
-
-        Configuration c = new Configuration();
-        FileSystem fs = FileSystem.get(c);
-        
-        SequenceFile.Reader reader = 
-            new SequenceFile.Reader( fs
-                                   , new Path(targetNodeFileName)
-                                   , c
-                                   );
-
-        IntWritable id = new IntWritable();
-        WikiPage page = new WikiPage();
-
-        int index = 0;
-        while ((reader.next(id, page)) && (index < targetLength))
+        try
         {
-            //Construct the set of //Construct the set of target id's
-            targetNodes.add(new Integer(id.get()));
-            ++index;
+            sourceNodeID = Integer.valueOf(conf.get("sourceNodeID"));
+            targetNodeFileName = conf.get("targetNodeFileName");
+            targetNodes = new TreeSet<Integer>();
+            targetLength = Integer.valueOf(conf.get("targetLength"));
+
+            Configuration c = new Configuration();
+            FileSystem fs = FileSystem.get(c);
+            
+            SequenceFile.Reader reader = 
+                new SequenceFile.Reader( fs
+                                       , new Path(targetNodeFileName)
+                                       , c
+                                       );
+
+            IntWritable id = new IntWritable();
+            WikiPage page = new WikiPage();
+
+            int index = 0;
+            while ((reader.next(id, page)) && (index < targetLength))
+            {
+                //Construct the set of //Construct the set of target id's
+                targetNodes.add(new Integer(id.get()));
+                ++index;
+            }
+        } 
+        catch (IOException e)
+        {
+            //Don't know what to do with this here...
         }
     }
 

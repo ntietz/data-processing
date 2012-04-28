@@ -1,4 +1,4 @@
-package com.treecitysoftware.algorithm.pagerank;
+package com.treecitysoftware.algorithm.parallelbfs;
 
 import com.treecitysoftware.data.*;
 
@@ -8,57 +8,105 @@ import org.apache.hadoop.mapred.*;
 
 import java.io.*;
 
-public class ParallelBFSPreprocessJob
+public class ParallelBFSJob
 {
     public static void main(String... args)
     throws IOException
     {
+        String inputPath, outputPath;
+        int numberOfReducers, maxDepth, targetGoalNumber;
         try
         {
-            
+            inputPath = args[0];
+            outputPath = args[1];
+            numberOfReducers = Integer.valueOf(args[2]);
+            maxDepth = Integer.valueOf(args[3]);
+            targetGoalNumber = Integer.valueOf(args[4]);
+
+            ParallelBFSJob driver = new ParallelBFSJob();
+
+            driver.run( inputPath
+                      , outputPath
+                      , numberOfReducers
+                      , maxDepth
+                      , targetGoalNumber
+                      );
         }
         catch (Exception e) 
         {
-            System.out.println("Usage : <...>");
+            System.out.println("Usage : <...> bfs /input/path /output/path [numReducers] [maxDepth] [goalNumTargets]");
             System.exit(0);
         }
-
-        JobConf conf = getJobConfiguration( inputPath
-                                          , outputPath
-                                          , numberOfReducers
-                                          );
-        RunningJob job = JobClient.runJob(conf);
-        job.waitForCompletion();
     }
 
+    /**
+     * Runs BFS until either the Maximum Depth has occured or until it finds 
+     * enough Target Nodes in the BFS.
+     * @param initialInputPath The Path to the initial input source
+     * @param outputBasePath The Path that will have the multiple job results
+     * @param maxDepthOfSearch The maximum depth the search will go
+     * @param goalNumberOfTargetsFound The number of Target Nodes we are aiming to find
+     */
+    public void run( String initialInputPath
+                   , String outputBasePath
+                   , int numberOfReducers
+                   , int maxDepthOfSearch
+                   , int goalNumberOfTargetsFound
+                   )
+    throws IOException
+    {
+        boolean keepGoing = true;
+        int round = 0;
+
+        String inputPath = initialInputPath;
+        String outputPath = outputBasePath + "/" + round;
+
+        while (keepGoing)
+        {
+            JobConf conf = getJobConfiguration( inputPath
+                                              , outputPath
+                                              , numberOfReducers
+                                              );
+
+            RunningJob job = JobClient.runJob(conf);
+            job.waitForCompletion();
+
+            long targetsFound = job.getCounters().findCounter("TARGETS", "FOUND").getCounter();
+
+            ++round;
+            keepGoing = (round < maxDepthOfSearch) && (targetsFound < goalNumberOfTargetsFound);
+            inputPath = outputPath;
+            outputPath = outputBasePath + "/" + round;
+        }
+    }
+
+    /**
+     * Creates a Configuration object based on the given input
+     * @param inputPath The location of the input data
+     * @param outputPath The location the result data will be stored
+     * @param numberOfReducers The number of reducers to run
+     */
     public static JobConf getJobConfiguration( String inputPath
                                              , String outputPath
                                              , int numberOfReducers
-                                             , String targetNodeFile
-                                             , int numberOfTargets
-                                             , int sourceNodeID
                                              )
     {
-        JobConf conf = new JobConf(ParallelBFSPreprocessJob.class);
-        conf.setJobName("pre-bfs");
+        JobConf conf = new JobConf(ParallelBFSJob.class);
+        conf.setJobName("bfs");
 
         conf.setMapOutputKeyClass(IntWritable.class);
-        conf.setMapOutputValueClass(BFSNode.class);
+        conf.setMapOutputValueClass(BFSNodeOrChange.class);
 
         conf.setOutputKeyClass(IntWritable.class);
         conf.setOutputValueClass(BFSNode.class);
 
-        conf.setMapperClass(ParallelBFSPreprocessMapper.class);
-        conf.setReducerClass(ParallelBFSPreprocessReducer.class);
+        conf.setMapperClass(ParallelBFSMapper.class);
+        conf.setReducerClass(ParallelBFSReducer.class);
 
         conf.setInputFormat(SequenceFileInputFormat.class);
         conf.setOutputFormat(SequenceFileOutputFormat.class);
 
         conf.setNumReduceTasks(numberOfReducers);
-        
-        conf.set("sourceNodeID", Integer.toString(sourceNodeID));
-        conf.set("targetNodeFileName", targetNodeFile);
-        conf.set("targetLength", Integer.toString(numberOfTargets));
 
         SequenceFileInputFormat.setInputPaths(conf, new Path(inputPath));
         SequenceFileOutputFormat.setOutputPath(conf, new Path(outputPath));

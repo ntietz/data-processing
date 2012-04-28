@@ -2,6 +2,7 @@ package com.treecitysoftware.common;
 
 import com.treecitysoftware.algorithm.pagerank.*;
 import com.treecitysoftware.algorithm.pagerank.topnode.*;
+import com.treecitysoftware.algorithm.parallelbfs.*;
 import com.treecitysoftware.tool.datagenerator.*;
 import com.treecitysoftware.tool.wikipedia.*;
 
@@ -23,6 +24,9 @@ public class CommonLauncher
             System.out.println("    pre-pagerank");
             System.out.println("    topnodes");
             System.out.println("    view-topnodes");
+            System.out.println("    pre-bfs");
+            System.out.println("    bfs");
+            System.out.println("    bfs-output");
             System.out.println("");
             System.exit(1);
         }
@@ -73,6 +77,21 @@ public class CommonLauncher
         {
             System.out.println("viewing pagerank");
             PageRankGraphViewer.main(arguments);
+        }
+        else if (command.equals("pre-bfs"))
+        {
+            System.out.println("parallel bfs preprocessing");
+            ParallelBFSPreprocessJob.main(arguments);
+        }
+        else if (command.equals("bfs"))
+        {
+            System.out.println("parallel breadth first search");
+            ParallelBFSJob.main(arguments);
+        }
+        else if (command.equals("bfs-output"))
+        {
+            System.out.println("parallel bfs ouput");
+            ParallelBFSOutputJob.main(arguments);
         }
     }
 }
