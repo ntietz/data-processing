@@ -87,8 +87,6 @@ implements Reducer<IntWritable, BFSNodeOrChange, IntWritable, BFSNode>
                 if (keyNode.isTarget())
                 {
                     reporter.incrCounter("TARGETS", "FOUND",1);
-                    // turn off targetting here so we only count it once
-                    keyNode.setTarget(false);
                 }
 
                 //Notify only those who haven't called us
