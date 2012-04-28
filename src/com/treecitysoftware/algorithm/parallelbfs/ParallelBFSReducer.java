@@ -63,6 +63,7 @@ implements Reducer<IntWritable, BFSNodeOrChange, IntWritable, BFSNode>
         if (smallestDistance == Integer.MAX_VALUE)
         {
             output.collect(key, keyNode);
+            reporter.incrCounter("NODES", "NOT FOUND", 1);
             return;
         }
         else
@@ -74,7 +75,6 @@ implements Reducer<IntWritable, BFSNodeOrChange, IntWritable, BFSNode>
             {
                 //We already have the shortest path
                 output.collect(key, keyNode);
-                reporter.incrCounter("NODES", "NOT FOUND", 1);
                 return;
             }
             else
