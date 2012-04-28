@@ -74,6 +74,7 @@ implements Reducer<IntWritable, BFSNodeOrChange, IntWritable, BFSNode>
             {
                 //We already have the shortest path
                 output.collect(key, keyNode);
+                reporter.incrCounter("NODES", "NOT FOUND", 1);
                 return;
             }
             else
