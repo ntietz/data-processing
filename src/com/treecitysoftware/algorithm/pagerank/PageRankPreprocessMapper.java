@@ -19,6 +19,7 @@ implements Mapper<IntWritable, WikiPage, IntWritable, WikiPage>
     throws IOException
     {
         output.collect(key, value);
+        reporter.incrCounter("NUMBER", "NODES", 1);
     }
 
 }
