@@ -1,6 +1,4 @@
-This repository contains the code we will need for parsing graphs, performing data analysis on them, and building indexes to be used by other apps.
+All code within this repository is copyright 2012 by Tree City Software, a small software startup based in Kent, Ohio. This software is free to use, but any use or modification is subject to license; we have chosen to license this software under GPLv3. Please refer to the document LICENSE in the root directory of the repository to retrieve this license.
 
-To compile and run the tests, use "ant run-tests".
-
-To generate a Cobertura code coverage report, run "ant coverage" after running the tests.
+To contact the owners of this code, email Nicole, Jimmy, Jason, or Dan by sending mail to owners@treecitysoftware.com or visiting us at www.treecitysoftware.com.
 
