@@ -28,7 +28,7 @@ public class PageRankDriver
         double dampingFactor = 0.2;
         if (args.length >= 5)
         {
-            dampeningFactor = Double.valueOf(args[4]);
+            dampingFactor = Double.valueOf(args[4]);
         }
 
         PageRankDriver driver = new PageRankDriver();
