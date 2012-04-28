@@ -27,7 +27,7 @@ implements Reducer<IntWritable, PageOrEdge, IntWritable, WikiPage>
                       )
     throws IOException
     {
-        WikiPage page = new WikiPage(key.get(), "");
+        WikiPage page = null;
 
         while (values.hasNext())
         {
@@ -40,13 +40,20 @@ implements Reducer<IntWritable, PageOrEdge, IntWritable, WikiPage>
             }
             else if (obj.isPage())
             {
-                page.setValue(obj.page.getValue());
+                page = obj.page;
                 reporter.incrCounter("ADDED", "PAGE", 1);
             }
         }
 
-        output.collect(key, page);
-        reporter.incrCounter("WRITTEN", "NODES", 1);
+        if (page != null)
+        {
+            output.collect(key, page);
+            reporter.incrCounter("PAGES", "WRITTEN", 1);
+        }
+        else
+        {
+            reporter.incrCounter("PAGES", "NULL", 1);
+        }
     }
 }
 
