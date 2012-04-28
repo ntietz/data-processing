@@ -59,11 +59,15 @@ implements Reducer<IntWritable, BFSNodeOrChange, IntWritable, BFSNode>
             }
         }
 
+        if (keyNode != null && keyNode.getValue().getDistance() != Integer.MAX_VALUE)
+        {
+            reporter.incrCounter("NODES", "REACHED", 1);
+        }
+
         //If d is infinity, we didn't get anything
         if (smallestDistance == Integer.MAX_VALUE)
         {
             output.collect(key, keyNode);
-            reporter.incrCounter("NODES", "NOT FOUND", 1);
             return;
         }
         else
