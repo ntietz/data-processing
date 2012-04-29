@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.*;
 
 public class FromToPair
-implements Writable
+implements WritableComparable
 {
     /**
      * First value in pair
@@ -57,6 +57,59 @@ implements Writable
     {
         left = in.readInt();
         right = in.readInt();
+    }
+
+    public int compareTo(Object obj)
+    {
+        if (obj instanceof FromToPair)
+        {
+            FromToPair other = (FromToPair) obj;
+
+            if (left != other.left)
+            {
+                if (left < other.left)
+                {
+                    return -1;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+            else if (right != other.right)
+            {
+                if (right < other.right)
+                {
+                    return -1;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof FromToPair)
+        {
+            FromToPair other = (FromToPair) obj;
+
+            return ((left == other.left) && (right == other.right));
+        }
+        else
+        {
+            return false;
+        }
     }
 }
 
