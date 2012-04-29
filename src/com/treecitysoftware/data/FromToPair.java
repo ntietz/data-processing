@@ -111,5 +111,10 @@ implements WritableComparable
             return false;
         }
     }
+
+    public int hashCode()
+    {
+        return left;
+    }
 }
 
