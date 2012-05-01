@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS
     ( `pages_id` int(8) unsigned NOT NULL AUTO_INCREMENT
     , `page_id` int(8) unsigned NOT NULL DEFAULT '0'
     , `title` varbinary(255) NOT NULL DEFAULT ''
-    , PRIMARY KEY (`page_id`)
+    , PRIMARY KEY (`pages_id`)
     ) ENGINE=InnoDB;
 
 -- DROP TABLE IF EXISTS `page_scores`;
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS
     (`page_scores_id` int(8) unsigned NOT NULL AUTO_INCREMENT
     ,`page_id` int(8) unsigned NOT NULL DEFAULT '0'
     , `score` DOUBLE NOT NULL
-    , PRIMARY KEY (`page_id`)
+    , PRIMARY KEY (`page_scores_id`)
     ) ENGINE=InnoDB;
 
 -- DROP TABLE IF EXISTS `links`;
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS
     (`links_id` int(8) unsigned NOT NULL AUTO_INCREMENT 
     ,`from_id` int(8) unsigned NOT NULL DEFAULT '0'
     , `to_id` int(8) unsigned NOT NULL DEFAULT '0'
-    , PRIMARY KEY (`from_id`, `to_id`)
+    , PRIMARY KEY (`links_id`)
     ) ENGINE=InnoDB;
 
 -- DROP TABLE IF EXISTS `bfs`;
