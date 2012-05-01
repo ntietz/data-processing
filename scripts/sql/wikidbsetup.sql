@@ -6,7 +6,8 @@
 
 CREATE TABLE IF NOT EXISTS
     `pages`
-    ( `page_id` int(8) unsigned NOT NULL DEFAULT '0'
+    ( `pages_id` int(8) unsigned NOT NULL AUTO_INCREMENT
+    , `page_id` int(8) unsigned NOT NULL DEFAULT '0'
     , `title` varbinary(255) NOT NULL DEFAULT ''
     , PRIMARY KEY (`page_id`)
     ) ENGINE=InnoDB;
@@ -15,7 +16,8 @@ CREATE TABLE IF NOT EXISTS
 
 CREATE TABLE IF NOT EXISTS
     `page_scores`
-    ( `page_id` int(8) unsigned NOT NULL DEFAULT '0'
+    (`page_scores_id` int(8) unsigned NOT NULL AUTO_INCREMENT
+    ,`page_id` int(8) unsigned NOT NULL DEFAULT '0'
     , `score` DOUBLE NOT NULL
     , PRIMARY KEY (`page_id`)
     ) ENGINE=InnoDB;
@@ -24,7 +26,8 @@ CREATE TABLE IF NOT EXISTS
     
 CREATE TABLE IF NOT EXISTS
     `links`
-    ( `from_id` int(8) unsigned NOT NULL DEFAULT '0'
+    (`links_id` int(8) unsigned NOT NULL AUTO_INCREMENT 
+    ,`from_id` int(8) unsigned NOT NULL DEFAULT '0'
     , `to_id` int(8) unsigned NOT NULL DEFAULT '0'
     , PRIMARY KEY (`from_id`, `to_id`)
     ) ENGINE=InnoDB;
