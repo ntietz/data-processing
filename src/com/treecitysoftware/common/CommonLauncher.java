@@ -5,6 +5,7 @@ import com.treecitysoftware.algorithm.pagerank.topnode.*;
 import com.treecitysoftware.algorithm.parallelbfs.*;
 import com.treecitysoftware.tool.datagenerator.*;
 import com.treecitysoftware.tool.wikipedia.*;
+import com.treecitysoftware.tool.hackyloader.*;
 
 import java.io.*;
 
@@ -28,6 +29,9 @@ public class CommonLauncher
             System.out.println("    bfs");
             System.out.println("    bfs-output");
             System.out.println("    view-bfs");
+            System.out.println("    pagelink-loader");
+            System.out.println("    pagescore-loader");
+            System.out.println("    bfs-loader");
             System.out.println("");
             System.exit(1);
         }
@@ -93,6 +97,21 @@ public class CommonLauncher
         {
             System.out.println("parallel bfs ouput");
             ParallelBFSOutputJob.main(arguments);
+        }
+        else if (command.equals("pagelink-loader"))
+        {
+            System.out.println("load page links");
+            PageLinkLoaderJob.main(arguments);
+        }
+        else if (command.equals("pagescore-loader"))
+        {
+            System.out.println("load page scores");
+            PageScoreLoaderJob.main(arguments);
+        }
+        else if (command.equals("bfs-loader"))
+        {
+            System.out.println("load bfs");
+            BFSLoaderJob.main(arguments);
         }
         else if (command.equals("view-bfs"))
         {
